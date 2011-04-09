@@ -11,11 +11,13 @@
     <?php wp_link_pages(array('before' => '<p><strong>Pages:</strong> ', 'after' => '</p>', 'next_or_number' => 'number')); ?>
 </div>
 </article>
+<?php if (!is_mobile()): ?>
 <section id="share">
 <p><strong>If you liked this post, please help me share it.</strong></p>
 <?php echo "<script type='text/javascript'>window.__title='".get_the_title()."';window.__permalink='". get_permalink()."';</script>\n"; ?>
 <span id='reddit-container'></span> <span id='twitter-container'></span> <span id='su-container'></span> <span id='dzone-container'></span>
 </section>
+<?php endif; ?>
 <section id="related-posts">
 	<h4 class="related-posts-header">{Similar Posts}</h4>
 <?php related_posts(); ?>
