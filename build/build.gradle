@@ -1,0 +1,106 @@
+defaultTasks 'all'
+
+// Short version string that which we can reverse engineer the date from
+def versionFormat = new java.text.SimpleDateFormat('yyDDHHmm')
+def version = Integer.toHexString(Integer.parseInt(versionFormat.format(new Date())))
+def srcDir = '..'
+def phpSrcDir = "${srcDir}/wp-content/themes/starkers3"
+def outputDir = '../target'
+def cssOutputDir = "${outputDir}/css"
+def cssOutputFile = "all.${version}-min.css"
+def jsOutputDir = "${outputDir}/js"
+def jsOutputFile = "all.${version}-min.js"
+
+task clean << {
+	description = 'Cleans old artifacts'
+	ant.delete(dir: outputDir)
+}
+
+task init << {
+	description = 'Creates artifact output directories'
+	(new File(cssOutputDir)).mkdirs()
+	(new File(jsOutputDir)).mkdirs()
+}
+
+task combineCss(dependsOn: 'init') << {
+	ant.concat(destfile: "${cssOutputDir}/all.${version}.css") {
+		fileset(dir: "${srcDir}/css", includes: '*.css')
+	}
+}
+
+task combineJs(dependsOn: 'init') << {
+	ant.concat(destfile: "${jsOutputDir}/all.${version}.js") {
+		filelist(dir: "${srcDir}/js", files: 'main.js, stacktrace.js')
+	}
+	ant.concat(destfile: "${jsOutputDir}/sh.${version}.js") {
+		filelist(dir: "${srcDir}/js/sh", files: 'shCore.js, shBrushBash.js, shBrushCss.js, shBrushGroovy.js, shBrushJava.js, shBrushJavaFX.js, shBrushJScript.js, shBrushPlain.js, shBrushPython.js, shBrushXml.js')
+	}
+}
+
+task minifyCss(dependsOn: 'combineCss') << {
+	ant.java(jar: 'lib/yuicompressor-2.4.2.jar', fork: true) {
+		arg(value: '--line-break')
+		arg(value: '0')
+		arg(value: "${cssOutputDir}/all.${version}.css")
+		arg(value: '-o')
+		arg(value: "${cssOutputDir}/${cssOutputFile}")
+	}
+	ant.gzip(src: "${cssOutputDir}/${cssOutputFile}", destfile: "${cssOutputDir}/${cssOutputFile}.gz")
+	ant.move(file: "${cssOutputDir}/${cssOutputFile}.gz", tofile: "${cssOutputDir}/${cssOutputFile}")
+}
+
+task minifyJs(dependsOn: 'combineJs') << {
+	['all', 'sh'].each { type ->
+		ant.java(jar: 'lib/yuicompressor-2.4.2.jar', fork: true) {
+			arg(value: "${jsOutputDir}/${type}.${version}.js")
+			arg(value: '-o')
+			arg(value: "${jsOutputDir}/${type}.${version}-min.js")
+		}
+		ant.gzip(src: "${jsOutputDir}/${type}.${version}-min.js", destfile: "${jsOutputDir}/${type}.${version}-min.js.gz")
+		ant.move(file: "${jsOutputDir}/${type}.${version}-min.js.gz", tofile: "${jsOutputDir}/${type}.${version}-min.js")
+	}
+}
+
+task updateIncludes(dependsOn: ['minifyCss', 'minifyJs']) << {
+	// Update header.php and footer.php
+	def headerFile = new File("${phpSrcDir}/header.php")
+	def newText = headerFile.text.replaceAll(/all\.[0-9a-f]+/, "all.${version}")
+	headerFile.write(newText)
+	
+	def footerFile = new File("${phpSrcDir}/footer.php")
+	newText = footerFile.text.replaceAll(/all\.[0-9a-f]+/, "all.${version}")
+	footerFile.write(newText)
+}
+
+task uploadArtifactsToS3() {
+    description = 'Uploads CSS and JS to AWS S3'
+
+    doLast() {
+		project.ant {
+			ant.taskdef(resource: 'org/springframework/build/aws/ant/antlib.xml', classpath: 'lib/commons-codec-1.5.jar:lib/commons-httpclient-3.1.jar:lib/commons-logging-1.1.1.jar:lib/java-xmlbuilder-0.4.jar:lib/jets3t-0.6.1.jar:lib/org.springframework.build.aws.ant-3.0.4.RELEASE.jar')
+			// TODO: set access and secret from properties file
+			s3(accessKey: '', secretKey: '') {
+	            upload(bucketName: 'eriwen-cdn', file: "${cssOutputDir}/${cssOutputFile}",
+	                    toFile: "css/${cssOutputFile}", publicRead: 'true') {
+	                metadata(name: 'Content-Type', value: 'text/css')
+	                metadata(name: 'Cache-Control', value: 'public')
+	                metadata(name: 'Expires', value: 'Thu, 16 Apr 2015 20:00:00 GMT')
+	                metadata(name: 'Content-Encoding', value: 'gzip')
+	                metadata(name: 'Vary', value: 'Accept-Encoding')
+	            }
+				upload(bucketName: 'eriwen-cdn', file: "${jsOutputDir}/${jsOutputFile}",
+	                    toFile: "js/${jsOutputFile}", publicRead: 'true') {
+	                metadata(name: 'Content-Type', value: 'text/javascript')
+	                metadata(name: 'Cache-Control', value: 'public')
+	                metadata(name: 'Expires', value: 'Thu, 16 Apr 2015 20:00:00 GMT')
+	                metadata(name: 'Content-Encoding', value: 'gzip')
+	                metadata(name: 'Vary', value: 'Accept-Encoding')
+	            }
+	        }
+		}
+    }
+}
+
+task all(dependsOn: ['clean', 'updateIncludes', 'uploadArtifactsToS3']) << {
+	println "Time to do 'git commit -am \"Releasing version ${version}\" && git push origin master'"
+}

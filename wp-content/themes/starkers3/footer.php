@@ -10,7 +10,7 @@
     </section>
     <section id="aboutwork">
 	<h4>My Work</h4>
-	<p><span id="twc-logo"></span>Iâ€™m a Senior Software Engineer for Time Warner Cable, building cool new stuff for customers. I also spend my time developing (hopefully) useful <a href="http://github.com/emwendelin/">open-source projects</a>.</p>
+	<p><span id="twc-logo"></span>IÕm a Senior Software Engineer for Time Warner Cable, building cool new stuff for customers. I also spend my time developing (hopefully) useful <a href="http://github.com/emwendelin/">open-source projects</a>.</p>
     </section>
     <section id="aboutfriends">
 	<h4>Better coders</h4>
@@ -26,7 +26,7 @@
 </footer>
 <?php wp_footer(); ?>
 <!-- Non-obfuscated js source at http://static.eriwen.com/js/main.5.js -->
-<script type="text/javascript" src="http://static.eriwen.com/js/all.5-min.js"></script>
+<script type="text/javascript" src="http://static.eriwen.com/js/all.b6fa04-min.js"></script>
 <script type="text/javascript">
 function foo(){bar('blah')} function bar(blah){thing()} function thing(){alert(printStackTrace().join('\n\n'))}
 var _gaq = _gaq || [];

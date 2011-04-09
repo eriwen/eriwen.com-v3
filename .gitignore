@@ -1,1 +1,4 @@
 .DS_Store
+target
+.gradle
+build/s3.properties
