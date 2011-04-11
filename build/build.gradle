@@ -38,7 +38,7 @@ task combineJs(dependsOn: 'init') << {
 }
 
 task minifyCss(dependsOn: 'combineCss') << {
-	ant.java(jar: 'lib/yuicompressor-2.4.2.jar', fork: true) {
+	ant.java(jar: 'lib/yuicompressor-2.4.4.jar', fork: true) {
 		arg(value: '--line-break')
 		arg(value: '0')
 		arg(value: "${cssOutputDir}/all.${version}.css")
@@ -51,7 +51,7 @@ task minifyCss(dependsOn: 'combineCss') << {
 
 task minifyJs(dependsOn: 'combineJs') << {
 	['all', 'sh'].each { type ->
-		ant.java(jar: 'lib/yuicompressor-2.4.2.jar', fork: true) {
+		ant.java(jar: 'lib/yuicompressor-2.4.4.jar', fork: true) {
 			arg(value: "${jsOutputDir}/${type}.${version}.js")
 			arg(value: '-o')
 			arg(value: "${jsOutputDir}/${type}.${version}-min.js")
@@ -62,7 +62,7 @@ task minifyJs(dependsOn: 'combineJs') << {
 }
 
 task updateIncludes(dependsOn: ['minifyCss', 'minifyJs']) << {
-	// Update header.php and footer.php
+	description = 'Update header.php and footer.php with new CSS/JS versions'
 	def headerFile = new File("${phpSrcDir}/header.php")
 	def newText = headerFile.text.replaceAll(/all\.[0-9a-f]+/, "all.${version}")
 	headerFile.write(newText)
@@ -78,8 +78,7 @@ task uploadArtifactsToS3() {
     doLast() {
 		project.ant {
 			ant.taskdef(resource: 'org/springframework/build/aws/ant/antlib.xml', classpath: 'lib/commons-codec-1.5.jar:lib/commons-httpclient-3.1.jar:lib/commons-logging-1.1.1.jar:lib/java-xmlbuilder-0.4.jar:lib/jets3t-0.6.1.jar:lib/org.springframework.build.aws.ant-3.0.4.RELEASE.jar')
-			// TODO: set access and secret from properties file
-			s3(accessKey: '', secretKey: '') {
+			s3(accessKey: accesskey, secretKey: secretkey) {
 	            upload(bucketName: 'eriwen-cdn', file: "${cssOutputDir}/${cssOutputFile}",
 	                    toFile: "css/${cssOutputFile}", publicRead: 'true') {
 	                metadata(name: 'Content-Type', value: 'text/css')
