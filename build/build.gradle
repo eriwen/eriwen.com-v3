@@ -22,7 +22,7 @@ configurations {
 
 dependencies {
 	antlibs 'org.springframework.build:org.springframework.build.aws.ant:3.0.5.RELEASE',
-	        'net.java.dev.jets3t:jets3t:0.7.3'
+			'net.java.dev.jets3t:jets3t:0.7.3'
 }
 
 task clean << {
@@ -87,31 +87,31 @@ task updateIncludes(dependsOn: ['minifyCss', 'minifyJs']) << {
 }
 
 task uploadArtifactsToS3() {
-    description = 'Uploads CSS and JS to AWS S3'
+	description = 'Uploads CSS and JS to AWS S3'
 
-    doLast() {
+	doLast() {
 		project.ant {
 			ant.taskdef(resource: 'org/springframework/build/aws/ant/antlib.xml', classpath: configurations.antlibs.asPath)
 			s3(accessKey: accesskey, secretKey: secretkey) {
-	            upload(bucketName: 'eriwen-cdn', file: "${cssOutputDir}/${cssOutputFile}",
-	                    toFile: "css/${cssOutputFile}", publicRead: 'true') {
-	                metadata(name: 'Content-Type', value: 'text/css')
-	                metadata(name: 'Cache-Control', value: 'public')
-	                metadata(name: 'Expires', value: 'Thu, 16 Apr 2015 20:00:00 GMT')
-	                metadata(name: 'Content-Encoding', value: 'gzip')
-	                metadata(name: 'Vary', value: 'Accept-Encoding')
-	            }
+				upload(bucketName: 'eriwen-cdn', file: "${cssOutputDir}/${cssOutputFile}",
+						toFile: "css/${cssOutputFile}", publicRead: 'true') {
+					metadata(name: 'Content-Type', value: 'text/css')
+					metadata(name: 'Cache-Control', value: 'public')
+					metadata(name: 'Expires', value: 'Thu, 16 Apr 2015 20:00:00 GMT')
+					metadata(name: 'Content-Encoding', value: 'gzip')
+					metadata(name: 'Vary', value: 'Accept-Encoding')
+				}
 				upload(bucketName: 'eriwen-cdn', file: "${jsOutputDir}/${jsOutputFile}",
-	                    toFile: "js/${jsOutputFile}", publicRead: 'true') {
-	                metadata(name: 'Content-Type', value: 'text/javascript')
-	                metadata(name: 'Cache-Control', value: 'public')
-	                metadata(name: 'Expires', value: 'Thu, 16 Apr 2015 20:00:00 GMT')
-	                metadata(name: 'Content-Encoding', value: 'gzip')
-	                metadata(name: 'Vary', value: 'Accept-Encoding')
-	            }
-	        }
+						toFile: "js/${jsOutputFile}", publicRead: 'true') {
+					metadata(name: 'Content-Type', value: 'text/javascript')
+					metadata(name: 'Cache-Control', value: 'public')
+					metadata(name: 'Expires', value: 'Thu, 16 Apr 2015 20:00:00 GMT')
+					metadata(name: 'Content-Encoding', value: 'gzip')
+					metadata(name: 'Vary', value: 'Accept-Encoding')
+				}
+			}
 		}
-    }
+	}
 }
 
 task all(dependsOn: ['clean', 'updateIncludes', 'uploadArtifactsToS3']) << {
