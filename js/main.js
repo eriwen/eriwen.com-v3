@@ -8,33 +8,95 @@
 			this.highlightSearchTerms();
 			// Test for placeholder attribute and emulate if not present
 			if (!('placeholder' in document.createElement('input'))) {
-				var searchinput = this.$('searchinput');
+				var searchinput = $('searchinput');
 				searchinput.style.paddingLeft = '0.7em';
-				this.addEvent(searchinput, 'focus', function() {
-					searchinput.style.color = '#000';
-					if (searchinput.value === 'Search posts...') {
-						searchinput.value = '';
-					}
-				});
-				this.addEvent(searchinput, 'blur', function() {
-					searchinput.style.color = '#999';
-					if (searchinput.value === '') {
-						searchinput.value = 'Search posts...';
-					}
-				});
-				this.fireEvent($('searchinput'), 'blur');
+				Page.fn.addEvent(searchinput, 'focus', Page.fn.clearSearchValue);
+				Page.fn.addEvent(searchinput, 'blur', Page.fn.loadSearchValue);
+				Page.fn.fireEvent(searchinput, 'blur');
 			}
 			
 			if ($('share')) {
-				// Load social buttons
-				var permalink = window.__permalink,
-					title = window.__title;
-		    	$('reddit-container').innerHTML = '<iframe src="http://reddit.com/static/button/button1.html?width=120&url=' + encodeURIComponent(permalink) + '&title=' + encodeURIComponent(title) + '" height="20" width="120" scrolling="no" frameborder="0"></iframe>';
-		    	$('su-container').innerHTML = '<iframe src="http://www.stumbleupon.com/badge/embed/1/?url=' + encodeURIComponent(permalink) + '" scrolling="no" frameborder="0" style="border: none; overflow: hidden; width: 74px; height: 20px;" allowTransparency="true"></iframe>';
-		    	$('twitter-container').innerHTML = "<a href='http://twitter.com/share' class='twitter-share-button' data-count='horizontal' data-via='eriwen'>Tweet</a>";
-		    	this.loadScript('http://platform.twitter.com/widgets.js', $('twitter-container'));
-		    	$('dzone-container').innerHTML = '<iframe src="http://widgets.dzone.com/links/widgets/zoneit.html?t=2&url=' + encodeURIComponent(permalink) + '&title=' + encodeURIComponent(title) + '" height="20" width="155" scrolling="no" frameborder="0"></iframe>';
+				Page.fn.addEvent(window, 'scroll', Page.fn.loadShareWidgets);
 		    }
+		
+			// Load comments on scroll
+			if ($('comments')) {
+				Page.fn.addEvent(window, 'scroll', Page.fn.loadComments);
+			}
+		},
+		clearSearchValue: function(evt) {
+			var targ = Page.fn.getEventTarget(evt);
+			targ.style.color = '#000';
+			if (targ.value === 'Search posts...') {
+				targ.value = '';
+			}
+		},
+		loadSearchValue: function(evt) {
+			var targ = Page.fn.getEventTarget(evt);
+			targ.style.color = '#999';
+			if (targ.value === '') {
+				targ.value = 'Search posts...';
+			}
+		},
+		loadShareWidgets: function() {
+			// Load social buttons
+			var permalink = window.__permalink,
+				title = window.__title;
+	    	$('reddit-container').innerHTML = '<iframe src="http://reddit.com/static/button/button1.html?width=120&url=' + encodeURIComponent(permalink) + '&title=' + encodeURIComponent(title) + '" height="20" width="120" scrolling="no" frameborder="0"></iframe>';
+	    	$('su-container').innerHTML = '<iframe src="http://www.stumbleupon.com/badge/embed/1/?url=' + encodeURIComponent(permalink) + '" scrolling="no" frameborder="0" style="border: none; overflow: hidden; width: 74px; height: 20px;" allowTransparency="true"></iframe>';
+	    	$('twitter-container').innerHTML = "<a href='http://twitter.com/share' class='twitter-share-button' data-count='horizontal' data-via='eriwen'>Tweet</a>";
+	    	Page.fn.loadScript('http://platform.twitter.com/widgets.js', $('twitter-container'));
+	    	$('dzone-container').innerHTML = '<iframe src="http://widgets.dzone.com/links/widgets/zoneit.html?t=2&url=' + encodeURIComponent(permalink) + '&title=' + encodeURIComponent(title) + '" height="20" width="155" scrolling="no" frameborder="0"></iframe>';
+		},
+		loadComments: function(evt) {
+			window.setTimeout(function() {
+				var commentsHtml = $('commentlist').innerHTML;
+				var commentsHtmlLength = commentsHtml.length;
+				$('commentlist').innerHTML = commentsHtml.substring(4, commentsHtmlLength - 4);
+				commentsHtml = commentsHtmlLength = null;
+			}, 400);
+			Page.fn.removeEvent(window, 'scroll', Page.fn.loadComments);
+		},
+		xhr: function(url, callback, postData) {
+			var request = createXMLHTTPObject();
+			if (!request) return;
+			var method = (postData) ? 'POST' : 'GET';
+			request.open(method, url, true);
+			request.setRequestHeader('User-Agent', 'XMLHTTP/1.0');
+			if (postData) {
+				request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+			}
+			request.onreadystatechange = function() {
+				if (request.readyState != 4) return;
+				if (request.status != 200 && request.status != 304) {
+					return;
+				}
+				callback(request);
+			}
+			if (request.readyState == 4) return;
+			request.send(postData);
+
+			function createXMLHTTPObject() {
+				var XhrFactories = [
+					function() {return new XMLHttpRequest()},
+					function() {return new ActiveXObject('Msxml2.XMLHTTP')},
+					function() {return new ActiveXObject('Msxml3.XMLHTTP')},
+					function() {return new ActiveXObject('Microsoft.XMLHTTP')}
+				];
+				var xmlhttp = false;
+				for (var i = 0; i < XhrFactories.length; i++) {
+					try {
+						xmlhttp = XhrFactories[i]();
+						createXMLHTTPObject = function() { 
+							return XhrFactories[i]();
+						};
+					} catch (e) {
+						continue;
+					}
+					break;
+				}
+				return xmlhttp;
+			}
 		},
 		/**
 		 * addEvent() adds a javascript event listener to obj of a type

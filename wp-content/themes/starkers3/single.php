@@ -19,10 +19,12 @@
 </section>
 <?php endif; ?>
 <section id="related-posts">
-	<h4 class="related-posts-header">{Similar Posts}</h4>
+<h4 class="related-posts-header">{Similar Posts}</h4>
 <?php related_posts(); ?>
 </section>
-	<?php comments_template( '', true ); ?>
+<section id="comments">
+<?php comments_template('', true) ?>
+</section>
 	<?php endwhile; else: ?>
 	<p>Sorry, no posts matched your criteria.</p>
 <?php endif; ?>
