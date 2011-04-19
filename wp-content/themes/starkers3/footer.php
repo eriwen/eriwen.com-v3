@@ -26,7 +26,7 @@
 </footer>
 <?php wp_footer(); ?>
 <!-- Non-obfuscated js source at http://eriwen.com/js/main.js -->
-<script type="text/javascript" src="http://static.eriwen.com/js/all.69f1c27-min.js"></script>
+<script type="text/javascript" src="http://static.eriwen.com/js/all.69f1c2c-min.js"></script>
 <script type="text/javascript">
 function foo(){bar('blah')} function bar(blah){thing()} function thing(){alert(printStackTrace().join('\n\n'))}
 var _gaq = _gaq || [];

@@ -40,6 +40,7 @@
 		},
 		loadShareWidgets: function() {
 			// Load social buttons
+			Page.fn.removeEvent(window, 'scroll', Page.fn.loadShareWidgets);
 			var permalink = window.__permalink,
 				title = window.__title;
 	    	$('reddit-container').innerHTML = '<iframe src="http://reddit.com/static/button/button1.html?width=120&url=' + encodeURIComponent(permalink) + '&title=' + encodeURIComponent(title) + '" height="20" width="120" scrolling="no" frameborder="0"></iframe>';
@@ -49,13 +50,13 @@
 	    	$('dzone-container').innerHTML = '<iframe src="http://widgets.dzone.com/links/widgets/zoneit.html?t=2&url=' + encodeURIComponent(permalink) + '&title=' + encodeURIComponent(title) + '" height="20" width="155" scrolling="no" frameborder="0"></iframe>';
 		},
 		loadComments: function(evt) {
+			Page.fn.removeEvent(window, 'scroll', Page.fn.loadComments);
 			window.setTimeout(function() {
 				var commentsHtml = $('commentlist').innerHTML;
 				var commentsHtmlLength = commentsHtml.length;
 				$('commentlist').innerHTML = commentsHtml.substring(4, commentsHtmlLength - 4);
 				commentsHtml = commentsHtmlLength = null;
-			}, 400);
-			Page.fn.removeEvent(window, 'scroll', Page.fn.loadComments);
+			}, 100);
 		},
 		xhr: function(url, callback, postData) {
 			var request = createXMLHTTPObject();
