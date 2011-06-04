@@ -4,12 +4,14 @@ defaultTasks 'all'
 def versionFormat = new java.text.SimpleDateFormat('yyDDHHmm')
 def version = Integer.toHexString(Integer.parseInt(versionFormat.format(new Date())))
 def srcDir = '..'
-def phpSrcDir = "${srcDir}/wp-content/themes/starkers3"
+def phpSrcDir = "wp-content/themes/starkers3"
 def outputDir = '../target'
 def cssOutputDir = "${outputDir}/css"
 def cssOutputFile = "all.${version}-min.css"
 def jsOutputDir = "${outputDir}/js"
 def jsOutputFile = "all.${version}-min.js"
+def jshintConfig = 'jshint.json'
+def jshintOutput = 'jshint.xml'
 
 repositories {
 	mavenRepo urls: 'http://repository.springsource.com/maven/bundles/release'
@@ -28,12 +30,28 @@ dependencies {
 task clean << {
 	description = 'Cleans old artifacts'
 	ant.delete(dir: outputDir)
+	ant.delete(file: jshintOutput)
 }
 
 task init << {
 	description = 'Creates artifact output directories'
 	(new File(cssOutputDir)).mkdirs()
 	(new File(jsOutputDir)).mkdirs()
+}
+
+task jshint(dependsOn: 'clean') << {
+	description = 'runs jshint on all non-test and lib JS files'
+	def jsPattern = ~/.*(?<!(min)?)\.js/
+	def jsFiles = [];
+	new File('js').eachFileRecurse {
+		if (it.canonicalPath =~ jsPattern) {
+	    	jsFiles << it.canonicalPath
+		}
+	}
+
+	def command = "jshint ${jsFiles.join(' ')} --config ${jshintConfig} --jslint-reporter"
+	def output = command.execute().text
+	new File(jshintOutput).write(output)
 }
 
 task combineCss(dependsOn: 'init') << {
@@ -114,6 +132,6 @@ task uploadArtifactsToS3() {
 	}
 }
 
-task all(dependsOn: ['clean', 'updateIncludes', 'uploadArtifactsToS3']) << {
+task all(dependsOn: ['clean', 'jshint', 'updateIncludes', 'uploadArtifactsToS3']) << {
 	println "Time to do 'git commit -am \"Releasing version ${version}\" && git push origin master'"
 }

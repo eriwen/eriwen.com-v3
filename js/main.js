@@ -43,11 +43,11 @@
 			Page.fn.removeEvent(window, 'scroll', Page.fn.loadShareWidgets);
 			var permalink = window.__permalink,
 				title = window.__title;
-	    	$('reddit-container').innerHTML = '<iframe src="http://reddit.com/static/button/button1.html?width=120&url=' + encodeURIComponent(permalink) + '&title=' + encodeURIComponent(title) + '" height="20" width="120" scrolling="no" frameborder="0"></iframe>';
-	    	$('su-container').innerHTML = '<iframe src="http://www.stumbleupon.com/badge/embed/1/?url=' + encodeURIComponent(permalink) + '" scrolling="no" frameborder="0" style="border: none; overflow: hidden; width: 74px; height: 20px;" allowTransparency="true"></iframe>';
-	    	$('twitter-container').innerHTML = "<a href='http://twitter.com/share' class='twitter-share-button' data-count='horizontal' data-via='eriwen'>Tweet</a>";
-	    	Page.fn.loadScript('http://platform.twitter.com/widgets.js', $('twitter-container'));
-	    	$('gplusone-container').innerHTML = '<g:plusone size="medium"></g:plusone>';
+			$('reddit-container').innerHTML = '<iframe src="http://reddit.com/static/button/button1.html?width=120&url=' + encodeURIComponent(permalink) + '&title=' + encodeURIComponent(title) + '" height="20" width="120" scrolling="no" frameborder="0"></iframe>';
+			$('su-container').innerHTML = '<iframe src="http://www.stumbleupon.com/badge/embed/1/?url=' + encodeURIComponent(permalink) + '" scrolling="no" frameborder="0" style="border: none; overflow: hidden; width: 74px; height: 20px;" allowTransparency="true"></iframe>';
+			$('twitter-container').innerHTML = "<a href='http://twitter.com/share' class='twitter-share-button' data-count='horizontal' data-via='eriwen'>Tweet</a>";
+			Page.fn.loadScript('http://platform.twitter.com/widgets.js', $('twitter-container'));
+			$('gplusone-container').innerHTML = '<g:plusone size="medium"></g:plusone>';
 			Page.fn.loadScript('https://apis.google.com/js/plusone.js');
 		},
 		loadComments: function(evt) {
@@ -60,30 +60,12 @@
 			}, 100);
 		},
 		xhr: function(url, callback, postData) {
-			var request = createXMLHTTPObject();
-			if (!request) return;
-			var method = (postData) ? 'POST' : 'GET';
-			request.open(method, url, true);
-			request.setRequestHeader('User-Agent', 'XMLHTTP/1.0');
-			if (postData) {
-				request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-			}
-			request.onreadystatechange = function() {
-				if (request.readyState != 4) return;
-				if (request.status != 200 && request.status != 304) {
-					return;
-				}
-				callback(request);
-			}
-			if (request.readyState == 4) return;
-			request.send(postData);
-
 			function createXMLHTTPObject() {
 				var XhrFactories = [
-					function() {return new XMLHttpRequest()},
-					function() {return new ActiveXObject('Msxml2.XMLHTTP')},
-					function() {return new ActiveXObject('Msxml3.XMLHTTP')},
-					function() {return new ActiveXObject('Microsoft.XMLHTTP')}
+					function() {return new XMLHttpRequest();},
+					function() {return new ActiveXObject('Msxml2.XMLHTTP');},
+					function() {return new ActiveXObject('Msxml3.XMLHTTP');},
+					function() {return new ActiveXObject('Microsoft.XMLHTTP');}
 				];
 				var xmlhttp = false;
 				for (var i = 0; i < XhrFactories.length; i++) {
@@ -99,6 +81,27 @@
 				}
 				return xmlhttp;
 			}
+			
+			var request = createXMLHTTPObject();
+			if (!request) {
+				return;
+			}
+			var method = (postData) ? 'POST' : 'GET';
+			request.open(method, url, true);
+			request.setRequestHeader('User-Agent', 'XMLHTTP/1.0');
+			if (postData) {
+				request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+			}
+			request.onreadystatechange = function() {
+				if (request.readyState !== 4 || (request.status !== 200 && request.status !== 304)) {
+					return;
+				}
+				callback(request);
+			};
+			if (request.readyState === 4) {
+				return;
+			}
+			request.send(postData);
 		},
 		/**
 		 * addEvent() adds a javascript event listener to obj of a type
@@ -110,15 +113,15 @@
 		 */
 		addEvent: function(obj, type, fn) {
 		    if (obj.addEventListener) {
-				addEvent = function(obj, type, fn) {
+				Page.fn.addEvent = function(obj, type, fn) {
 					obj.addEventListener(type, fn, false);
-				}
+				};
 		    } else { //IE
-				addEvent = function(obj, type, fn) {
+				Page.fn.addEvent = function(obj, type, fn) {
 					obj.attachEvent('on' + type, fn);
-				}
+				};
 		    }
-			addEvent(obj, type, fn);
+			Page.fn.addEvent(obj, type, fn);
 		},
 		/**
 		 * removeEvent() removes a javascript event listener to obj
@@ -130,15 +133,15 @@
 		 */
 		removeEvent: function(obj, type, fn) {
 		    if (obj.removeEventListener) {
-				removeEvent = function(obj, type, fn) {
+				Page.fn.removeEvent = function(obj, type, fn) {
 					obj.removeEventListener(type, fn, false);
-				}
+				};
 		    } else { //IE
-		        removeEvent = function(obj, type, fn) {
+		        Page.fn.removeEvent = function(obj, type, fn) {
 					obj.detachEvent('on' + type, fn);
-				}
+				};
 		    }
-			removeEvent(obj, type, fn);
+			Page.fn.removeEvent(obj, type, fn);
 		},
 		/**
 		 * fireEvent() Fires an event of the given type on the given object.
@@ -148,17 +151,17 @@
 		 */
 		fireEvent: function(obj, type) {
 			if (document.createEvent) {
-				fireEvent = function(obj, type) {
+				Page.fn.fireEvent = function(obj, type) {
 					var evt = document.createEvent("HTMLEvents");
 					evt.initEvent(type, false, true);
 					return !obj.dispatchEvent(evt);					
-				}
+				};
 			} else { //IE
-				fireEvent = function(obj, type) {
-					return obj.fireEvent('on' + type, document.createEventObject())					
-				}
+				Page.fn.fireEvent = function(obj, type) {
+					return obj.fireEvent('on' + type, document.createEventObject());				
+				};
 			}
-			fireEvent(obj, type);
+			Page.fn.fireEvent(obj, type);
 		},
 		/**
 		 * getEventTarget() returns the HTML element that an event occured upon
@@ -168,10 +171,15 @@
 		 */
 		getEventTarget: function(evt) {
 			var targ;
-			if (!evt) var evt = window.event;
-			if (evt.target) targ = evt.target;
-			else if (evt.srcElement) targ = evt.srcElement;
-			if (targ.nodeType == 3) { // defeat Safari bug
+			if (!evt) {
+				var evt = window.event;
+			}
+			if (evt.target) {
+				targ = evt.target;
+			} else if (evt.srcElement) { 
+				targ = evt.srcElement;
+			}
+			if (targ.nodeType === 3) { // defeat Safari bug
 				targ = targ.parentNode;
 			}
 			return targ;
@@ -183,19 +191,19 @@
 		 */
 		domready: function(func) {
 		    if (document.addEventListener) {
-				domready = function(fn) {
+				Page.fn.domready = function(fn) {
 					document.addEventListener('DOMContentLoaded', fn, false);
-				}
+				};
 		    } else { //IE
-				domready = function(fn) {
-					if (document.readystate == 'complete') { //Prevent this from firing too early in IE7
+				Page.fn.domready = function(fn) {
+					if (document.readystate === 'complete') { //Prevent this from firing too early in IE7
 						window.setTimeout(fn, 0);
 					} else {
 						Page.prototype.addEvent(window, 'load', fn);
 					}					
-				}
+				};
 		    }
-			domready(func);
+			Page.fn.domready(func);
 		},
 		/**
 		 * Inject a Javascript file and call a callback function when it's loaded.
@@ -210,15 +218,15 @@
 			script.type = 'text/javascript';
 			if (script.readyState) { //IE
 				script.onreadystatechange = function() {
-					if (script.readyState == 'loaded' || script.readyState == 'complete') {
+					if (script.readyState === 'loaded' || script.readyState === 'complete') {
 						script.onreadystatechange = null;
 						callback && callback();
 					}
-				}
+				};
 			} else {
 				script.onload = function() {
 					callback && callback();
-				}
+				};
 			}
 			
 			script.src = src;
@@ -226,7 +234,7 @@
 			script.defer = true;
 			// Suggested by Google: http://googlecode.blogspot.com/2010/11/instant-previews-under-hood.html
 			var injectTarget = targetEl || document.getElementsByTagName('head')[0];
-			window.setTimeout(function() {injectTarget.appendChild(script)}, 0);
+			window.setTimeout(function() {injectTarget.appendChild(script);}, 0);
 			return script;
 		},
 		/**
@@ -236,7 +244,9 @@
 		 */
 		getEmSize: function(el) {
 		    // If you pass in an element ID then get a reference to the element
-		    if (typeof el === 'undefined') el = document.documentElement;
+		    if (typeof el === 'undefined') {
+				el = document.documentElement;
+			}
 		    var tempDiv = document.createElement("DIV"); 
 		    tempDiv.style.height = 1 + "em";
 		    el.appendChild(tempDiv);
@@ -278,7 +288,7 @@
 		    var rawSearchString = window.location.search.replace(/[a-zA-Z0-9\?\&\=\%\#]+s\=(\w+)(\&.*)?/, "$1");
 		    // Replace '+' with '|' for regex
 		    // Also replace '%20' if your cms/blog uses this instead
-		    return rawSearchString.replace(/\%20|\+/g, "\|");
+		    return rawSearchString.replace(/\%20|\+/g, '|');
 		},
 		/**
 		 * Given an element, Regex, and termid, wrap any regex matches in the
@@ -295,7 +305,7 @@
 	};
 	Page.prototype.$ = function(str) {
 		return document.getElementById(str);
-	}
+	};
 	
 	window.Page = Page;
 	window.$ = Page.fn.$;
