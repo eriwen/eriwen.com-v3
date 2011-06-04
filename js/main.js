@@ -47,7 +47,8 @@
 	    	$('su-container').innerHTML = '<iframe src="http://www.stumbleupon.com/badge/embed/1/?url=' + encodeURIComponent(permalink) + '" scrolling="no" frameborder="0" style="border: none; overflow: hidden; width: 74px; height: 20px;" allowTransparency="true"></iframe>';
 	    	$('twitter-container').innerHTML = "<a href='http://twitter.com/share' class='twitter-share-button' data-count='horizontal' data-via='eriwen'>Tweet</a>";
 	    	Page.fn.loadScript('http://platform.twitter.com/widgets.js', $('twitter-container'));
-	    	$('dzone-container').innerHTML = '<iframe src="http://widgets.dzone.com/links/widgets/zoneit.html?t=2&url=' + encodeURIComponent(permalink) + '&title=' + encodeURIComponent(title) + '" height="20" width="155" scrolling="no" frameborder="0"></iframe>';
+	    	$('gplusone-container').innerHTML = '<g:plusone size="medium"></g:plusone>';
+			Page.fn.loadScript('https://apis.google.com/js/plusone.js');
 		},
 		loadComments: function(evt) {
 			Page.fn.removeEvent(window, 'scroll', Page.fn.loadComments);

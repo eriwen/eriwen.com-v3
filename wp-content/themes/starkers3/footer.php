@@ -10,23 +10,25 @@
     </section>
     <section id="aboutwork">
 	<h4>My Work</h4>
-	<p><span id="twc-logo"></span>I'm a Senior Software Engineer for Time Warner Cable, building cool new stuff for customers. I also spend my time developing (hopefully) useful <a href="http://github.com/emwendelin/">open-source projects</a>.</p>
+	<p><span id="twc-logo"></span>I'm a Senior Software Engineer for Time Warner Cable, building cool new stuff for customers. I also spend my time developing (hopefully) useful <a href="https://github.com/eriwen/">open-source projects</a>.</p>
     </section>
     <section id="aboutfriends">
-	<h4>Better coders</h4>
+	<h4>Smart people</h4>
 	<ul><li><a href="http://jroller.com/aalmiray/" rel="contact" title="Andres Almiray&#8217;s Weblog" target="_blank">Andres Almiray</a></li>
 	<li><a href="http://css-tricks.com" rel="friend" title="CSS Tricks" target="_blank">Chris Coyier</a></li>
 	<li><a href="http://davidwalsh.name/" rel="friend" title="PHP, MySQL, CSS, Javascript, MooTools, and Everything Else" target="_blank">David Walsh</a></li>
 	<li><a href="http://blog.fredjean.net/" rel="friend met co-worker" title="Out of my mind" target="_blank">Fred Jean</a></li>
-	<li><a href="http://johnnywey.wordpress.com/" rel="friend" title="a regular expression" target="_blank">Johnny Wey</a></li>
-	<li><a href="http://www.catonmat.net/" rel="contact" title="programming, hacking, software reuse, software ideas, computer security, google and technology">Peteris Krumins</a></li></ul>
+	<li><a href="https://twitter.com/#!/jrideout" rel="friend met co-worker" title="Jacob Rideout on Twitter" target="_blank">Jacob Rideout</a></li>
+	<li><a href="http://johnnywey.wordpress.com/" rel="friend met co-worker" title="a regular expression" target="_blank">Johnny Wey</a></li>
+	<li><a href="http://www.catonmat.net/" rel="contact" title="programming, hacking, software reuse, software ideas, computer security, google and technology">Peteris Krumins</a></li>
+	<li><a href="http://www.nomachetejuggling.com/" rel="friend met co-worker" title="Absolutely No Machete Juggling" target="_blank">Rod Hilton</a></li></ul>
     </section>
 </div>
 <div class="cleardiv"> </div>
 </footer>
 <?php wp_footer(); ?>
 <!-- Non-obfuscated js source at http://eriwen.com/js/main.js -->
-<script type="text/javascript" src="http://static.eriwen.com/js/all.69f1c2c-min.js"></script>
+<script type="text/javascript" src="http://static.eriwen.com/js/all.6a6224b-min.js"></script>
 <script type="text/javascript">
 function foo(){bar('blah')} function bar(blah){thing()} function thing(){alert(printStackTrace().join('\n\n'))}
 var _gaq = _gaq || [];

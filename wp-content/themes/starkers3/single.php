@@ -15,7 +15,7 @@
 <section id="share">
 <p><strong>If you liked this post, please help me share it.</strong></p>
 <?php echo "<script type='text/javascript'>window.__title='".get_the_title()."';window.__permalink='". get_permalink()."';</script>\n"; ?>
-<span id='reddit-container'></span> <span id='twitter-container'></span> <span id='su-container'></span> <span id='dzone-container'></span>
+<span id='reddit-container'></span> <span id='twitter-container'></span> <span id='su-container'></span> <span id='gplusone-container'></span>
 </section>
 <?php endif; ?>
 <section id="related-posts">
