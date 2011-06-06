@@ -10,7 +10,7 @@ def cssOutputDir = "${outputDir}/css"
 def cssOutputFile = "all.${version}-min.css"
 def jsOutputDir = "${outputDir}/js"
 def jsOutputFile = "all.${version}-min.js"
-def jshintConfig = 'jshint.json'
+def jshintConfig = 'build/jshint.json'
 def jshintOutput = 'jshint.xml'
 
 repositories {
@@ -41,15 +41,16 @@ task init << {
 
 task jshint(dependsOn: 'clean') << {
 	description = 'runs jshint on all non-test and lib JS files'
-	def jsPattern = ~/.*(?<!(min)?)\.js/
+	def jsPattern = ~/.*main\.js/
 	def jsFiles = [];
-	new File('js').eachFileRecurse {
+	new File("js").eachFileRecurse {
 		if (it.canonicalPath =~ jsPattern) {
 	    	jsFiles << it.canonicalPath
 		}
 	}
 
 	def command = "jshint ${jsFiles.join(' ')} --config ${jshintConfig} --jslint-reporter"
+	println command
 	def output = command.execute().text
 	new File(jshintOutput).write(output)
 }
@@ -110,6 +111,7 @@ task uploadArtifactsToS3() {
 	doLast() {
 		project.ant {
 			ant.taskdef(resource: 'org/springframework/build/aws/ant/antlib.xml', classpath: configurations.antlibs.asPath)
+			// NOTE: Keys defined in secret gradle.properties file
 			s3(accessKey: accesskey, secretKey: secretkey) {
 				upload(bucketName: 'eriwen-cdn', file: "${cssOutputDir}/${cssOutputFile}",
 						toFile: "css/${cssOutputFile}", publicRead: 'true') {

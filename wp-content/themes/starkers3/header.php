@@ -9,14 +9,15 @@
 <head>
 <base href="http://eriwen.com/" />
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="language" content="en, sv" /><meta http-equiv="X-UA-Compatible" content="chrome=1" /><meta name="verify-v1" content="P2xRqLl8A6YG9QoZdBuhksLUfzrww7khJZnI2X8TID8=" /><meta name="y_key" content="62ed107e006109d4" /><meta name="author" content="Eric Wendelin" />
+<meta property="og:site_name" content="Eric Wendelin's Blog"/><meta property="og:type" content="blog"/>
 <title><?php 
 if (is_home()) { bloginfo('name'); echo " - "; bloginfo('description'); $paged = intval(get_query_var('paged')); if(!empty($paged) || $paged != 0) { echo " - Page".$paged; } 
 } elseif (is_category()) {single_cat_title(); echo " - "; bloginfo('name');
 } elseif (is_single() || is_page()) {single_post_title(); echo " - "; bloginfo('name');
 } elseif (is_search()) {bloginfo('name'); echo " search results: "; echo wp_specialchars($s);
 } else { wp_title('',true); } ?></title>
-<!-- Unminified CSS at http://static.eriwen.com/css/all.6a622a9.css -->
-<link rel="stylesheet" href="http://static.eriwen.com/css/all.6a622a9-min.css" type="text/css" />
+<!-- Unminified CSS at http://static.eriwen.com/css/all.6a62248.css -->
+<link rel="stylesheet" href="http://static.eriwen.com/css/all.6a62248-min.css" type="text/css" />
 <!--[if lt IE 9]>
 <script type="text/javascript" src="http://static.eriwen.com/js/html5-min.js"></script>
 <![endif]-->

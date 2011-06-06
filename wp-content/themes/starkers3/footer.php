@@ -4,7 +4,7 @@
     <section id="abouteric">
         <h4>Yes Me... Me. Me. Me.</h4>
         <section id="twitter-container">
-        <figure><img id="ericpic" src="http://static.eriwen.com/images/eric-75.jpg" alt="Eric Wendelin's Photo" width="75" height="75" /></figure>
+        <figure><img id="ericpic" src="http://static.eriwen.com/images/eric3-85.jpg" alt="Eric Wendelin's Photo" width="85" height="85" /></figure>
         <blockquote id="twitter-status"><span class="arrow"><span> </span> </span><span id="status-text"><?php twitter_messages('eriwen', 1, false, false, false, true, true, false); ?></span><p id="twitter-link"><a href="http://twitter.com/eriwen/">@eriwen</a></p></blockquote>
         </section>
     </section>
@@ -28,7 +28,7 @@
 </footer>
 <?php wp_footer(); ?>
 <!-- Non-obfuscated js source at http://eriwen.com/js/main.js -->
-<script type="text/javascript" src="http://static.eriwen.com/js/all.6a622a9-min.js"></script>
+<script type="text/javascript" src="http://static.eriwen.com/js/all.6a6224b-min.js"></script>
 <script type="text/javascript">
 function foo(){bar('blah')} function bar(blah){thing()} function thing(){alert(printStackTrace().join('\n\n'))}
 var _gaq = _gaq || [];
