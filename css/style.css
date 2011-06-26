@@ -88,7 +88,7 @@
     	#rsslink { background: transparent url('../images/sprites1.png') no-repeat; background-position: 0 -149px; color: #F61; padding-left: 48px; }
     	#twitterlink { background: transparent url('../images/sprites1.png') no-repeat; background-position: 0 -247px; padding-left: 75px; }
         #subscribe-container a { float: left; margin: 0 5px; height: 43px; }
-        	#subscribe-container a:hover { -moz-transition: rotate(-3deg); -o-transition: rotate(-3deg); -webkit-animation-name: shake; -webkit-animation-duration: .8s; -webkit-animation-direction: alternate; -webkit-animation-timing-function: linear; }
+        	#subscribe-container a:hover { -moz-transition: rotate(-3deg); -o-transition: rotate(-3deg); }
         #subscribe-container div { font-size: 1.8em; height: 45px; }
         	#numsubscribers { color: #F82; font-size: 1.1em; _font-size: 1.3em; }
         	#numtweeters { color: #3692FF; font-size: 1.1em; _font-size: 1.3em; }
@@ -246,12 +246,6 @@
 @media screen and (-webkit-min-device-pixel-ratio:0) {
     /* NOTE: must set font-size larger for webkit so search box isn't too small */
 	#searchinput { font-size: 16px; }
-}
-@-webkit-keyframes shake {
-	0% { -webkit-transform: scale(1.0) rotate(0deg); }
-	33% { -webkit-transform: scale(1.1) rotate(-5deg); }
-	67% { -webkit-transform: scale(1.1) rotate(5deg); }
-	100% { -webkit-transform: scale(1.0) rotate(0deg); }
 }
 @media print { 
     body, #content { width: 100%; margin: 0; float: none; background-color: #fff; }

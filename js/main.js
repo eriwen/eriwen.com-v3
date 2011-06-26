@@ -231,7 +231,6 @@
 			
 			script.src = src;
 			script.async = true;
-			script.defer = true;
 			// Suggested by Google: http://googlecode.blogspot.com/2010/11/instant-previews-under-hood.html
 			var injectTarget = targetEl || document.getElementsByTagName('head')[0];
 			window.setTimeout(function() {injectTarget.appendChild(script);}, 0);

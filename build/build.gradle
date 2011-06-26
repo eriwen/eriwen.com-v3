@@ -12,6 +12,7 @@ def jsOutputDir = "${outputDir}/js"
 def jsOutputFile = "all.${version}-min.js"
 def jshintConfig = 'build/jshint.json'
 def jshintOutput = 'jshint.xml'
+def csslintOutput = 'csslint.xml'
 
 repositories {
 	mavenRepo urls: 'http://repository.springsource.com/maven/bundles/release'
@@ -51,8 +52,25 @@ task jshint(dependsOn: 'clean') << {
 
 	def command = "jshint ${jsFiles.join(' ')} --config ${jshintConfig} --jslint-reporter"
 	println command
-	def output = command.execute().text
-	new File(jshintOutput).write(output)
+	new File(jshintOutput).write(command.execute().text)
+}
+
+task csslint(dependsOn: 'clean') << {
+	description = 'runs csslint on all relevant CSS files'
+	def csslintRules = ['adjoining-classes', 'box-model', 'display-property', 'grouping',
+		'empty-rules', 'errors', 'floats', 'font-faces', 'font-sizes', 'gradients', 'important',
+		'overqualified-elements', 'regex-selectors', 'rules-count', 'vendor-prefix', 'width-100',
+		'zero-units']
+	def csslintOptions = "--rules=${csslintRules.join(',')} --format=jslint-xml"
+	
+	def sout = new StringBuffer()
+	def serr = new StringBuffer()
+	def command = "csslint ${csslintOptions} css/style.css"
+	println command
+	def proc = command.execute()
+	proc.consumeProcessOutput(sout, serr)
+	proc.waitForOrKill(2000)
+	new File("csslint.xml").write(sout.toString())
 }
 
 task combineCss(dependsOn: 'init') << {
@@ -134,6 +152,6 @@ task uploadArtifactsToS3() {
 	}
 }
 
-task all(dependsOn: ['clean', 'jshint', 'updateIncludes', 'uploadArtifactsToS3']) << {
+task all(dependsOn: ['clean', 'jshint', 'csshint', 'updateIncludes', 'uploadArtifactsToS3']) << {
 	println "Time to do 'git commit -am \"Releasing version ${version}\" && git push origin master'"
 }
