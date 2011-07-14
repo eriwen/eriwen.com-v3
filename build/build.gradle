@@ -152,6 +152,6 @@ task uploadArtifactsToS3() {
 	}
 }
 
-task all(dependsOn: ['clean', 'jshint', 'csshint', 'updateIncludes', 'uploadArtifactsToS3']) << {
+task all(dependsOn: ['clean', 'jshint', 'csslint', 'updateIncludes', 'uploadArtifactsToS3']) << {
 	println "Time to do 'git commit -am \"Releasing version ${version}\" && git push origin master'"
 }
