@@ -260,7 +260,7 @@
 		highlightSearchTerms: function() {
 		    // Get search string
 		    if (/s\=/.test(window.location.search)) {
-		        var searchString = this.getSearchStringFromUrl();
+		        var searchString = this.getSearchStringFromUrl(window.location.search);
 		        // Starting node, parent to all nodes you want to search
 		        var textContainerNode = $('content');
 		        var searchInfo = 'Search Results for: ';
@@ -283,8 +283,8 @@
 		 *
 		 * @return <String> pipe separated terms
 		 */
-		getSearchStringFromUrl: function() {
-		    var rawSearchString = window.location.search.replace(/[a-zA-Z0-9\?\&\=\%\#]+s\=(\w+)(\&.*)?/, "$1");
+		getSearchStringFromUrl: function(str) {
+		    var rawSearchString = str.replace(/[a-zA-Z0-9\?\&\=\%\#]+s\=(\w+)(\&.*)?/, '$1');
 		    // Replace '+' with '|' for regex
 		    // Also replace '%20' if your cms/blog uses this instead
 		    return rawSearchString.replace(/\%20|\+/g, '|');

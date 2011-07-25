@@ -96,8 +96,10 @@ task minifyCss(dependsOn: 'combineCss') << {
 		arg(value: '-o')
 		arg(value: "${cssOutputDir}/${cssOutputFile}")
 	}
-	ant.gzip(src: "${cssOutputDir}/${cssOutputFile}", destfile: "${cssOutputDir}/${cssOutputFile}.gz")
-	ant.move(file: "${cssOutputDir}/${cssOutputFile}.gz", tofile: "${cssOutputDir}/${cssOutputFile}")
+	ant.gzip(src: "${cssOutputDir}/${cssOutputFile}",
+	 		destfile: "${cssOutputDir}/${cssOutputFile}.gz")
+	ant.move(file: "${cssOutputDir}/${cssOutputFile}.gz",
+	 		tofile: "${cssOutputDir}/${cssOutputFile}")
 }
 
 task minifyJs(dependsOn: 'combineJs') << {
@@ -107,8 +109,10 @@ task minifyJs(dependsOn: 'combineJs') << {
 			arg(value: '-o')
 			arg(value: "${jsOutputDir}/${type}.${version}-min.js")
 		}
-		ant.gzip(src: "${jsOutputDir}/${type}.${version}-min.js", destfile: "${jsOutputDir}/${type}.${version}-min.js.gz")
-		ant.move(file: "${jsOutputDir}/${type}.${version}-min.js.gz", tofile: "${jsOutputDir}/${type}.${version}-min.js")
+		ant.gzip(src: "${jsOutputDir}/${type}.${version}-min.js",
+		 		destfile: "${jsOutputDir}/${type}.${version}-min.js.gz")
+		ant.move(file: "${jsOutputDir}/${type}.${version}-min.js.gz",
+		 		tofile: "${jsOutputDir}/${type}.${version}-min.js")
 	}
 }
 
@@ -128,7 +132,8 @@ task uploadArtifactsToS3() {
 
 	doLast() {
 		project.ant {
-			ant.taskdef(resource: 'org/springframework/build/aws/ant/antlib.xml', classpath: configurations.antlibs.asPath)
+			ant.taskdef(resource: 'org/springframework/build/aws/ant/antlib.xml',
+			 	classpath: configurations.antlibs.asPath)
 			// NOTE: Keys defined in secret gradle.properties file
 			s3(accessKey: accesskey, secretKey: secretkey) {
 				upload(bucketName: 'eriwen-cdn', file: "${cssOutputDir}/${cssOutputFile}",
