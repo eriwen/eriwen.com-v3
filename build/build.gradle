@@ -5,7 +5,7 @@ def versionFormat = new java.text.SimpleDateFormat('yyDDHHmm')
 def version = Integer.toHexString(Integer.parseInt(versionFormat.format(new Date())))
 def srcDir = '..'
 def phpSrcDir = "wp-content/themes/starkers3"
-def outputDir = '../target'
+def outputDir = 'target'
 def cssOutputDir = "${outputDir}/css"
 def cssOutputFile = "all.${version}-min.css"
 def jsOutputDir = "${outputDir}/js"
@@ -13,6 +13,7 @@ def jsOutputFile = "all.${version}-min.js"
 def jshintConfig = 'build/jshint.json'
 def jshintOutput = 'jshint.xml'
 def csslintOutput = 'csslint.xml'
+def testDir = 'test'
 
 repositories {
 	mavenRepo urls: 'http://repository.springsource.com/maven/bundles/release'
@@ -71,6 +72,43 @@ task csslint(dependsOn: 'clean') << {
 	proc.consumeProcessOutput(sout, serr)
 	proc.waitForOrKill(2000)
 	new File("csslint.xml").write(sout.toString())
+}
+
+task test(dependsOn: 'init') << {
+	def specs = []
+	new File(testDir).eachFile {
+		if (it.name.endsWith('.html')) {
+			specs << it
+		}
+	}
+	
+	def startTime = new Date().time
+	def numFailures = 0
+	def testsFailed = false
+	specs.each { File spec ->
+		println "Running ${spec.name}..."
+		
+		def outputFile = "${outputDir}/TEST-${spec.name.replace('-', '').replace('.html', '.xml')}"
+		ant.exec(outputproperty: 'cmdOut', errorproperty: 'cmdErr',
+				resultproperty: 'exitCode', failonerror: 'true', executable: '/usr/local/bin/phantomjs') {
+			arg(value: "../test/lib/phantomjs-jasmine-runner.js")
+			arg(value: "${spec.canonicalPath}")
+		}
+		// Check exit code
+		if (ant.project.properties.exitCode != '0') {
+			testsFailed = true
+			numFailures++
+			println '\tFAILED'
+		} else {
+			println '\tPASSED'
+		}
+
+		new File(outputFile).write(ant.project.properties.cmdOut)
+	}
+	
+	println "Jasmine tests completed in ${new Date().time - startTime}ms"
+	println "Jasmine Tests ${testsFailed ? 'FAILED' : 'PASSED'} - view reports in ${outputDir}"
+	ant.fail(if: testsFailed, message: 'JS Tests Failed')
 }
 
 task combineCss(dependsOn: 'init') << {
@@ -157,6 +195,6 @@ task uploadArtifactsToS3() {
 	}
 }
 
-task all(dependsOn: ['clean', 'jshint', 'csslint', 'updateIncludes', 'uploadArtifactsToS3']) << {
+task all(dependsOn: ['clean', 'jshint', 'csslint', 'test', 'updateIncludes', 'uploadArtifactsToS3']) << {
 	println "Time to do 'git commit -am \"Releasing version ${version}\" && git push origin master'"
 }
