@@ -16,8 +16,8 @@ if (is_home()) { bloginfo('name'); echo " - "; bloginfo('description'); $paged =
 } elseif (is_single() || is_page()) {single_post_title();
 } elseif (is_search()) {bloginfo('name'); echo " search results: "; echo wp_specialchars($s);
 } else { wp_title('',true); } ?></title>
-<!-- Unminified CSS at http://static.eriwen.com/css/all.6adec59.css -->
-<link rel="stylesheet" href="http://static.eriwen.com/css/all.6adec59-min.css" type="text/css" />
+<!-- Unminified CSS at http://static.eriwen.com/css/all.6ae88e9.css -->
+<link rel="stylesheet" href="http://static.eriwen.com/css/all.6ae88e9-min.css" type="text/css" />
 <!--[if lt IE 9]>
 <script type="text/javascript" src="http://static.eriwen.com/js/html5-min.js"></script>
 <![endif]-->

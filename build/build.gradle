@@ -120,13 +120,12 @@ task combineCss(dependsOn: 'init') << {
 task combineJs(dependsOn: 'init') << {
 	ant.concat(destfile: "${jsOutputDir}/all.${version}.js") {
 		filelist(dir: "${srcDir}/js", files: 'main.js, stacktrace.js')
-	}
-	ant.concat(destfile: "${jsOutputDir}/sh.${version}.js") {
 		filelist(dir: "${srcDir}/js/sh", files: 'shCore.js, shBrushBash.js, shBrushCss.js, shBrushGroovy.js, shBrushJava.js, shBrushJavaFX.js, shBrushJScript.js, shBrushPlain.js, shBrushPython.js, shBrushXml.js')
 	}
 }
 
 task minifyCss(dependsOn: 'combineCss') << {
+	description = 'minify combined CSS file'
 	ant.java(jar: 'lib/yuicompressor-2.4.4.jar', fork: true) {
 		arg(value: '--line-break')
 		arg(value: '0')
@@ -141,17 +140,16 @@ task minifyCss(dependsOn: 'combineCss') << {
 }
 
 task minifyJs(dependsOn: 'combineJs') << {
-	['all', 'sh'].each { type ->
-		ant.java(jar: 'lib/yuicompressor-2.4.4.jar', fork: true) {
-			arg(value: "${jsOutputDir}/${type}.${version}.js")
-			arg(value: '-o')
-			arg(value: "${jsOutputDir}/${type}.${version}-min.js")
-		}
-		ant.gzip(src: "${jsOutputDir}/${type}.${version}-min.js",
-		 		destfile: "${jsOutputDir}/${type}.${version}-min.js.gz")
-		ant.move(file: "${jsOutputDir}/${type}.${version}-min.js.gz",
-		 		tofile: "${jsOutputDir}/${type}.${version}-min.js")
+	description = 'minify combined JS file'
+	def minifiedFilePath = "${jsOutputDir}/${jsOutputFile}"
+	ant.java(jar: 'lib/compiler.jar', fork: true) {
+		arg(value: '--js')
+		arg(value: "${jsOutputDir}/all.${version}.js")
+		arg(value: '--js_output_file')
+		arg(value: minifiedFilePath)
 	}
+	ant.gzip(src: minifiedFilePath, destfile: "${jsOutputDir}/all.${version}-min.js.gz")
+	ant.move(file: "${jsOutputDir}/all.${version}-min.js.gz", tofile: minifiedFilePath)
 }
 
 task updateIncludes(dependsOn: ['minifyCss', 'minifyJs']) << {
