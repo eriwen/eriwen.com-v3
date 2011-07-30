@@ -90,7 +90,7 @@ task test(dependsOn: 'init') << {
 		
 		def outputFile = "${outputDir}/TEST-${spec.name.replace('-', '').replace('.html', '.xml')}"
 		ant.exec(outputproperty: 'cmdOut', errorproperty: 'cmdErr',
-				resultproperty: 'exitCode', failonerror: 'true', executable: '/usr/local/bin/phantomjs') {
+				resultproperty: 'exitCode', failonerror: 'false', executable: '/usr/local/bin/phantomjs') {
 			arg(value: "../test/lib/phantomjs-jasmine-runner.js")
 			arg(value: "${spec.canonicalPath}")
 		}
