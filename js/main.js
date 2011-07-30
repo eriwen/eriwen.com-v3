@@ -1,9 +1,13 @@
+/*global ActiveXObject: false, $: false */
 (function(window, undefined) {
 	var Page = function() {
 		return Page.fn.init();
 	};
 	
 	Page.fn = Page.prototype = {
+		/**
+		 * Set events and call any other initializing functions.
+		 */
 		init: function() {
 			this.highlightSearchTerms();
 			// Test for placeholder attribute and emulate if not present
@@ -15,15 +19,20 @@
 				Page.fn.fireEvent(searchinput, 'blur');
 			}
 			
+			// Load sharing bits after user scrolls
 			if ($('share')) {
 				Page.fn.addEvent(window, 'scroll', Page.fn.loadShareWidgets);
-		    }
+			}
 		
 			// Load comments on scroll
 			if ($('comments')) {
 				Page.fn.addEvent(window, 'scroll', Page.fn.loadComments);
 			}
 		},
+		/**
+		 * Clears the value of the target of an event handler.
+		 * @param {HTMLEvent} Object passed by event delegate
+		 */
 		clearSearchValue: function(evt) {
 			var targ = Page.fn.getEventTarget(evt);
 			targ.style.color = '#000';
@@ -31,6 +40,10 @@
 				targ.value = '';
 			}
 		},
+		/**
+		 * Populates the value of the target of an event handler if the value is cleared.
+		 * @param {HTMLEvent} Object passed by event delegate
+		 */
 		loadSearchValue: function(evt) {
 			var targ = Page.fn.getEventTarget(evt);
 			targ.style.color = '#999';
@@ -38,6 +51,9 @@
 				targ.value = 'Search posts...';
 			}
 		},
+		/**
+		 * Inject resources for sharing buttons.
+		 */
 		loadShareWidgets: function() {
 			// Load social buttons
 			Page.fn.removeEvent(window, 'scroll', Page.fn.loadShareWidgets);
@@ -50,124 +66,79 @@
 			$('gplusone-container').innerHTML = '<g:plusone size="medium"></g:plusone>';
 			Page.fn.loadScript('https://apis.google.com/js/plusone.js');
 		},
-		loadComments: function(evt) {
+		/**
+		 * Remove HTML comments around blog comments, allowing them to display and make requests.
+		 */
+		loadComments: function() {
 			Page.fn.removeEvent(window, 'scroll', Page.fn.loadComments);
 			window.setTimeout(function() {
-				var commentsHtml = $('commentlist').innerHTML;
-				var commentsHtmlLength = commentsHtml.length;
+				var commentsHtml = $('commentlist').innerHTML,
+					commentsHtmlLength = commentsHtml.length;
 				$('commentlist').innerHTML = commentsHtml.substring(4, commentsHtmlLength - 4);
 				commentsHtml = commentsHtmlLength = null;
 			}, 100);
 		},
-		xhr: function(url, callback, postData) {
-			function createXMLHTTPObject() {
-				var XhrFactories = [
-					function() {return new XMLHttpRequest();},
-					function() {return new ActiveXObject('Msxml2.XMLHTTP');},
-					function() {return new ActiveXObject('Msxml3.XMLHTTP');},
-					function() {return new ActiveXObject('Microsoft.XMLHTTP');}
-				];
-				var xmlhttp = false;
-				for (var i = 0; i < XhrFactories.length; i++) {
-					try {
-						xmlhttp = XhrFactories[i]();
-						createXMLHTTPObject = function() { 
-							return XhrFactories[i]();
-						};
-					} catch (e) {
-						continue;
-					}
-					break;
-				}
-				return xmlhttp;
-			}
-			
-			var request = createXMLHTTPObject();
-			if (!request) {
-				return;
-			}
-			var method = (postData) ? 'POST' : 'GET';
-			request.open(method, url, true);
-			request.setRequestHeader('User-Agent', 'XMLHTTP/1.0');
-			if (postData) {
-				request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-			}
-			request.onreadystatechange = function() {
-				if (request.readyState !== 4 || (request.status !== 200 && request.status !== 304)) {
-					return;
-				}
-				callback(request);
-			};
-			if (request.readyState === 4) {
-				return;
-			}
-			request.send(postData);
-		},
 		/**
-		 * addEvent() adds a javascript event listener to obj of a type
+		 * Adds a javascript event listener to obj of a type
 		 * and also receives a function to execute when that event is fired
-		 * 
-		 * @param obj - Object reference
-		 * @param type - String containing event name (e.g. "click")
-		 * @param fn - Function to execute
+		 * @param obj {Object} reference
+		 * @param type {String} containing event name (e.g. "onclick")
+		 * @param fn {Function} definition to execute
 		 */
 		addEvent: function(obj, type, fn) {
-		    if (obj.addEventListener) {
+			if (obj.addEventListener) {
 				Page.fn.addEvent = function(obj, type, fn) {
 					obj.addEventListener(type, fn, false);
 				};
-		    } else { //IE
+			} else { //IE
 				Page.fn.addEvent = function(obj, type, fn) {
 					obj.attachEvent('on' + type, fn);
 				};
-		    }
+			}
 			Page.fn.addEvent(obj, type, fn);
 		},
 		/**
-		 * removeEvent() removes a javascript event listener to obj
-		 * of a type and also receives a function to execute when that event is fired
-		 * 
-		 * @param obj - Object reference
-		 * @param type - String containing event name (e.g. "onclick")
-		 * @param fn - Function definition to execute
+		 * Removes a javascript event listener to obj of a type and also receives a
+		 * function to execute when that event is fired.
+		 * @param obj {Object} reference
+		 * @param type {String} containing event name (e.g. "onclick")
+		 * @param fn {Function} definition to execute
 		 */
 		removeEvent: function(obj, type, fn) {
-		    if (obj.removeEventListener) {
+			if (obj.removeEventListener) {
 				Page.fn.removeEvent = function(obj, type, fn) {
 					obj.removeEventListener(type, fn, false);
 				};
-		    } else { //IE
-		        Page.fn.removeEvent = function(obj, type, fn) {
+			} else { //IE
+				Page.fn.removeEvent = function(obj, type, fn) {
 					obj.detachEvent('on' + type, fn);
 				};
-		    }
+			}
 			Page.fn.removeEvent(obj, type, fn);
 		},
 		/**
-		 * fireEvent() Fires an event of the given type on the given object.
-		 *
-		 * @param obj - Object to fire event on
-		 * @param type - Type of event to fire
+		 * Fires an event of the given type on the given object.
+		 * @param obj {Object} to fire event on
+		 * @param type {String} of event to fire
 		 */
 		fireEvent: function(obj, type) {
 			if (document.createEvent) {
 				Page.fn.fireEvent = function(obj, type) {
 					var evt = document.createEvent("HTMLEvents");
 					evt.initEvent(type, false, true);
-					return !obj.dispatchEvent(evt);					
+					return !obj.dispatchEvent(evt);
 				};
 			} else { //IE
 				Page.fn.fireEvent = function(obj, type) {
-					return obj.fireEvent('on' + type, document.createEventObject());				
+					return obj.fireEvent('on' + type, document.createEventObject());
 				};
 			}
 			Page.fn.fireEvent(obj, type);
 		},
 		/**
-		 * getEventTarget() returns the HTML element that an event occured upon
-		 *
-		 * @param e - HTML Event object
-		 * @return - HTML Element
+		 * Returns the HTML element that an event occured upon.
+		 * @param e {HTMLEvent} object
+		 * @return {HTMLElement} event target
 		 */
 		getEventTarget: function(evt) {
 			var targ;
@@ -186,32 +157,30 @@
 		},
 		/**
 		 * Add an event to execute a given function once the DOM is loaded.
-		 *
 		 * @param func - Function to execute as soon as possible
 		 */
 		domready: function(func) {
-		    if (document.addEventListener) {
+			if (document.addEventListener) {
 				Page.fn.domready = function(fn) {
 					document.addEventListener('DOMContentLoaded', fn, false);
 				};
-		    } else { //IE
+			} else { //IE
 				Page.fn.domready = function(fn) {
 					if (document.readystate === 'complete') { //Prevent this from firing too early in IE7
 						window.setTimeout(fn, 0);
 					} else {
-						Page.prototype.addEvent(window, 'load', fn);
-					}					
+						Page.fn.addEvent(window, 'load', fn);
+					}
 				};
-		    }
+			}
 			Page.fn.domready(func);
 		},
 		/**
 		 * Inject a Javascript file and call a callback function when it's loaded.
-		 * 
-		 * @param src - String URL to JS file
-		 * @param targetEl - HTMLElement script should be injected into, defaults to HEAD
-		 * @param callback - callback function to execute on success
-		 * @return HTMLElement Script so we can set the source to null or whatever later
+		 * @param src {String} URL to JS file
+		 * @param targetEl {HTMLElement} script should be injected into, defaults to HEAD
+		 * @param callback {Function} to execute on success
+		 * @return {HTMLElement} Script so we can set the source to null or whatever later
 		 */
 		loadScript: function(src, targetEl, callback) {
 			var script = document.createElement('script');
@@ -238,68 +207,65 @@
 		},
 		/**
 		 * Determine the size of 1 "em" based on the given element or the body.
-		 * 
-		 * @param (Optional) <Element> within which to measure
+		 * @param (Optional) {Element} within which to measure
+		 * @return {Number} size of 1em in pixels
 		 */
 		getEmSize: function(el) {
-		    // If you pass in an element ID then get a reference to the element
-		    if (typeof el === 'undefined') {
+			// Default to body
+			if (typeof el === 'undefined') {
 				el = document.documentElement;
 			}
-		    var tempDiv = document.createElement("DIV"); 
-		    tempDiv.style.height = 1 + "em";
-		    el.appendChild(tempDiv);
-		    var emSize = tempDiv.offsetHeight;
-		    el.removeChild(tempDiv);
-		    return emSize;
+			var tempDiv = document.createElement("DIV"); 
+			tempDiv.style.height = 1 + "em";
+			el.appendChild(tempDiv);
+			var emSize = tempDiv.offsetHeight;
+			el.removeChild(tempDiv);
+			return emSize;
 		},
 		/**
-		 * Check for a search term in the URL and highlight all nodes in
-		 * #content with any of the words.
+		 * Check for a search term in the URL and highlight all nodes in content with any of the words.
 		 */
 		highlightSearchTerms: function() {
-		    // Get search string
-		    if (/s\=/.test(window.location.search)) {
-		        var searchString = this.getSearchStringFromUrl(window.location.search);
-		        // Starting node, parent to all nodes you want to search
-		        var textContainerNode = $('content');
-		        var searchInfo = 'Search Results for: ';
-		        // Split search terms on '|' and iterate over resulting array
-		        var searchTerms = searchString.split('|');
-		        for (var i = 0, l = searchTerms.length; i < l; i++) {
-		            // The regex is the secret, it prevents text within tag declarations to be affected
-		            var regex = new RegExp(">([^<]*)?(" + searchTerms[i] + ")([^>]*)?<", "ig");
-		            this.highlightTextNodes(textContainerNode, regex, i);
-		            searchInfo += ' <span class="highlighted term' + i + '">' + searchTerms[i] + '</span> ';
-		        }
-		        var searchTermDiv = document.createElement("H2");
-		        searchTermDiv.className = 'searchterms';
-		        searchTermDiv.innerHTML = searchInfo;
-		        textContainerNode.insertBefore(searchTermDiv, textContainerNode.childNodes[0]);
-		    }
+			// Get search string
+			if (/s\=/.test(window.location.search)) {
+				var searchString = this.getSearchStringFromUrl(window.location.search);
+				// Starting node, parent to all nodes you want to search
+				var textContainerNode = $('content');
+				var searchInfo = 'Search Results for: ';
+				// Split search terms on '|' and iterate over resulting array
+				var searchTerms = searchString.split('|');
+				for (var i = 0, l = searchTerms.length; i < l; i++) {
+					// The regex is the secret, it prevents text within tag declarations to be affected
+					var regex = new RegExp(">([^<]*)?(" + searchTerms[i] + ")([^>]*)?<", "ig");
+					this.highlightTextNodes(textContainerNode, regex, i);
+					searchInfo += ' <span class="highlighted term' + i + '">' + searchTerms[i] + '</span> ';
+				}
+				var searchTermDiv = document.createElement("H2");
+				searchTermDiv.className = 'searchterms';
+				searchTermDiv.innerHTML = searchInfo;
+				textContainerNode.insertBefore(searchTermDiv, textContainerNode.childNodes[0]);
+			}
 		},
 		/**
 		 * Parse individual words from URL search.
-		 *
-		 * @return <String> pipe separated terms
+		 * @return {String} pipe separated terms
 		 */
 		getSearchStringFromUrl: function(str) {
-		    var rawSearchString = str.replace(/[a-zA-Z0-9\?\&\=\%\#]+s\=(\w+)(\&.*)?/, '$1');
-		    // Replace '+' with '|' for regex
-		    // Also replace '%20' if your cms/blog uses this instead
-		    return rawSearchString.replace(/\%20|\+/g, '|');
+			var rawSearchString = str.replace(/[a-zA-Z0-9\?\&\=\%\#]+s\=(\w+)(\&.*)?/, '$1');
+			// Replace '+' with '|' for regex
+			// Also replace '%20' if your cms/blog uses this instead
+			return rawSearchString.replace(/\%20|\+/g, '|');
 		},
 		/**
 		 * Given an element, Regex, and termid, wrap any regex matches in the
 		 * content with a span given a class with the termid.
-		 * 
-		 * @param <Element> to search content
-		 * @param <RegExp> of terms to look for
-		 * @param <String> termid unique to each word or search term
+		 * @param {HTMLElement} to search content
+		 * @param {RegExp} of terms to look for
+		 * @param {String} termid unique to each word or search term
 		 */
 		highlightTextNodes: function(element, regex, termid) {
-		    var tempinnerHTML = element.innerHTML;
-		    element.innerHTML = tempinnerHTML.replace(regex, '>$1<span class="highlighted term' + termid + '">$2</span>$3<');
+			var tempinnerHTML = element.innerHTML;
+			element.innerHTML = tempinnerHTML.replace(regex, '>$1<span class="highlighted term' + termid + '">$2</span>$3<');
 		}
 	};
 	Page.prototype.$ = function(str) {
