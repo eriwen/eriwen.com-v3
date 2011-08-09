@@ -1,0 +1,10 @@
+{
+	'name': 'eriwen.com',
+	'description': 'Eric Wendelin\'s Blog built with PHP and node.js',
+	'version': '3.0.5',
+	'private': true,
+	'dependencies': {
+		'jshint': '>=0.2.3',
+		'csslint': '>=0.5.0'
+	}
+}
