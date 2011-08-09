@@ -1,4 +1,7 @@
 .DS_Store
 target
+node_modules
 .gradle
 build/gradle.properties
+jshint.xml
+csslint.xml
