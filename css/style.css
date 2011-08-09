@@ -147,9 +147,9 @@
 	.cleardiv { clear: both; }
 	/* Plugins */
 	#content .dp-highlighter ol { padding: 0; }
-	.syntaxhighlighter { _overflow-x: scroll; }
+	.syntaxhighlighter { width: 100%; margin: 1em 0; position: relative; overflow: auto; font-size: 1em;; _overflow-x: scroll; }
+	.syntaxhighlighter.nogutter { margin: 1em 1.5em; }
 	.syntaxhighlighter a, .syntaxhighlighter div, .syntaxhighlighter code, .syntaxhighlighter table, .syntaxhighlighter table td, .syntaxhighlighter table tr, .syntaxhighlighter table tbody, .syntaxhighlighter table thead, .syntaxhighlighter table caption, .syntaxhighlighter textarea { -moz-border-radius: 0 0 0 0; -webkit-border-radius: 0 0 0 0; background: none; border: 0; bottom: auto; float: none; height: auto; left: auto; line-height: 1.1em; margin: 0; outline: 0; overflow: visible; padding: 0; position: static; right: auto; text-align: left; top: auto; vertical-align: baseline; width: auto; box-sizing: content-box; font-family: "Consolas", "Bitstream Vera Sans Mono", "Courier New", Courier, monospace; font-weight: normal; font-style: normal; font-size: 1em; min-height: inherit; min-height: auto; }
-	.syntaxhighlighter { width: 100%; margin: 1em 0 1em 0; position: relative; overflow: auto; font-size: 1em; }
 	.syntaxhighlighter.source { overflow: hidden }
 	.syntaxhighlighter .bold { font-weight: bold }
 	.syntaxhighlighter .italic { font-style: italic }
