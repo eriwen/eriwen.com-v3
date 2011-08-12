@@ -121,7 +121,7 @@ task combineCss(dependsOn: 'init') << {
 
 task combineJs(dependsOn: 'init') << {
 	ant.concat(destfile: "${jsOutputDir}/all.${version}.js") {
-		filelist(dir: "${srcDir}/js", files: 'main.js, stacktrace.js')
+		filelist(dir: "${srcDir}/js", files: 'main.js, stacktrace.js, comment-reply.js')
 		filelist(dir: "${srcDir}/js/sh", files: 'shCore.js, shBrushBash.js, shBrushCss.js, shBrushGroovy.js, shBrushJava.js, shBrushJavaFX.js, shBrushJScript.js, shBrushPlain.js, shBrushPython.js, shBrushXml.js')
 	}
 }
