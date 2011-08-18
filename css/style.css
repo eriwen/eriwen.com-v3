@@ -93,7 +93,10 @@
 			#subscribe-container a:hover { -webkit-transition: rotate(-3deg); -moz-transition: rotate(-3deg); -o-transition: rotate(-3deg); transition: rotate(-3deg); }
 		#subscribe-container div { font-size: 1.8em; height: 45px; }
 		#promo { margin-top: 1.7em; }
-			#promotejs { background: transparent url('../images/sprites3.png') no-repeat; background-position: 0 -139px; width: 175px; height: 148px; }
+			#promo a { display: inline-block; }
+			#promoterwe { background: transparent url('../images/rwe.png') no-repeat 0 0; width: 125px; height: 125px; }
+			#promotenuru { background: transparent url('../images/nuru.png') no-repeat 0 0; width: 125px; height: 125px; }
+			#promotejs { background: transparent url('../images/sprites3.png') no-repeat 0 -139px; width: 175px; height: 148px; }
 	/* Comments */ 
 	ul.trackback-list { margin-left: 32px; }
 	#content .responses-header, #content .trackbacks-header, #content .recent-posts-header, #content .related-posts-header, #content #reply-title { color: #00C; clear: both; }

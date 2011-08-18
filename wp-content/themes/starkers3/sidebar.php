@@ -31,6 +31,8 @@
 <li><a href="http://faceoffshow.com/2009/05/12/episode-16-green-to-the-selenium-scene/" title="Faceoff show Selenium podcast">Selenium podcast</a></li></ul>
 	</section>
 	<section id="promo" class="section">
-<a href='https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array' title='JS Array .sort'><div id='promotejs'></div></a>
+		<a href='http://www.therichwebexperience.com/conference/fort_lauderdale/2011/11/home' title='The Rich Web Experience 2011'><div id='promoterwe'></div></a>
+		<a href='http://www.nuruinternational.org/' title='Nuru International'><div id='promotenuru'></div></a>
+		<a href='https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array' title='JS Array .sort'><div id='promotejs'></div></a>
 	</section>
 </aside>

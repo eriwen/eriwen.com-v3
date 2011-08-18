@@ -28,7 +28,7 @@
 <div class="cleardiv"> </div>
 </footer>
 <!-- Non-obfuscated js source at http://eriwen.com/js/main.js -->
-<script type="text/javascript" src="http://static.eriwen.com/js/all.6b0a8a8-min.js"></script>
+<script type="text/javascript" src="http://static.eriwen.com/js/all.6b192cc-min.js"></script>
 <?php wp_footer(); ?>
 <script type="text/javascript">
 function foo(){bar('blah')} function bar(blah){thing()} function thing(){alert(printStackTrace().join('\n\n'))}
