@@ -19,14 +19,16 @@
 				Page.fn.fireEvent(searchinput, 'blur');
 			}
 			
-			// Load sharing bits after user scrolls
+			// Load sharing bits after user scrolls to optimize initial page loadtime
 			if ($('share')) {
 				Page.fn.addEvent(window, 'scroll', Page.fn.loadShareWidgets);
 			}
-		
-			// Load comments on scroll
-			if ($('comments')) {
-				Page.fn.addEvent(window, 'scroll', Page.fn.loadComments);
+			
+			// Load comments on scroll or if the URL references a comment
+			if (window.location.hash) {
+				Page.fn.loadComments();
+			} else if ($('comments')) {
+				Page.fn.addEvent(window, 'scroll', Page.fn.loadCommentsLater);
 			}
 		},
 		/**
@@ -70,14 +72,18 @@
 		 * Remove HTML comments around blog comments, allowing them to display and make requests.
 		 */
 		loadComments: function() {
-			Page.fn.removeEvent(window, 'scroll', Page.fn.loadComments);
-			window.setTimeout(function() {
-				var commentsHtml = $('commentlist').innerHTML,
-					commentsHtmlLength = commentsHtml.length;
-				$('commentlist').innerHTML = commentsHtml.substring(4, commentsHtmlLength - 4);
-				commentsHtml = commentsHtmlLength = null;
-			}, 100);
+			var commentsHtml = $('commentlist').innerHTML,
+				commentsHtmlLength = commentsHtml.length;
+			$('commentlist').innerHTML = commentsHtml.substring(4, commentsHtmlLength - 4);
+			commentsHtml = commentsHtmlLength = null;
 		},
+		/**
+		 * Event handler for scroll events loading comments after a certain timeout to optimize initial page load.
+		 */
+		loadCommentsLater: function() {
+			Page.fn.removeEvent(window, 'scroll', Page.fn.loadComments);
+			window.setTimeout(Page.fn.loadComments, 17);
+		}
 		/**
 		 * Adds a javascript event listener to obj of a type
 		 * and also receives a function to execute when that event is fired
