@@ -83,7 +83,7 @@
 		loadCommentsLater: function() {
 			Page.fn.removeEvent(window, 'scroll', Page.fn.loadComments);
 			window.setTimeout(Page.fn.loadComments, 17);
-		}
+		},
 		/**
 		 * Adds a javascript event listener to obj of a type
 		 * and also receives a function to execute when that event is fired
