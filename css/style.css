@@ -117,6 +117,7 @@
 			.commentlist .pingback .comment-meta { display: none; }
 			.commentlist .pingback .reply { display: none; }
 		.commentlist .pingback p { font-size: 0.8em; }
+		.comment-body code { white-space: pre; white-space: pre-wrap; word-wrap: break-word; }
 	#content .sharediv {}
 	textarea#comment { width: 99%; }
 	#commentform .comment-form-field { color: #70727C; display: inline-block; font-size: 0.9em; line-height: 1.3em; width: 32%; }
