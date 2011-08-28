@@ -22,11 +22,17 @@ repositories {
 
 configurations {
 	antlibs
+	js
+	css
+	html
 }
 
 dependencies {
 	antlibs 'org.springframework.build:org.springframework.build.aws.ant:3.0.5.RELEASE',
 			'net.java.dev.jets3t:jets3t:0.7.3'
+	html 'com.googlecode.htmlcompressor:htmlcompressor:1.4'
+	js 'com.google.javascript:closure-compiler:r1043'
+	css 'com.yahoo.platform.yui:yuicompressor:2.4.6'
 }
 
 task clean << {
@@ -126,9 +132,13 @@ task combineJs(dependsOn: 'init') << {
 	}
 }
 
+task minifyHtml() << {
+	description = 'minify HTML in different parts of template'
+}
+
 task minifyCss(dependsOn: 'combineCss') << {
 	description = 'minify combined CSS file'
-	ant.java(jar: 'lib/yuicompressor-2.4.4.jar', fork: true) {
+	ant.java(jar: 'lib/yuicompressor-2.4.6.jar', fork: true) {
 		arg(value: '--line-break')
 		arg(value: '0')
 		arg(value: "${cssOutputDir}/all.${version}.css")
