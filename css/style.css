@@ -7,7 +7,7 @@
 	#0000CC - Dark Blue
 	#C5060B - Red
 	#70727C - Gray
-	********************************************** */ 
+	********************************************** */
 	body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,textarea,p,blockquote,th,td { margin: 0; padding: 0; }
 	table { border-collapse: collapse; border-spacing: 0; }
 	fieldset, img { border: 0; }
@@ -22,9 +22,9 @@
 	a img { border: none; }
 	a { color: #00C; text-decoration: none; }
 	h1 { font-size: 2em; color: #333; }
+	img { -ms-interpolation-mode: bicubic; }
 	html { height: 100%; width: 100%; }
 	body { min-width: 960px; background-color: #FFF; font-family: Monaco, Consolas, 'Lucida Grande', 'Lucida Console', 'American Typewriter', 'Nimbus Mono L', sans-serif; font-size: 16px; text-shadow: rgba(0,0,0,0.01) 0 0 0; }
-	img { -ms-interpolation-mode: bicubic; }
 	#header { background: -webkit-gradient(linear, left top, left bottom, from(#FFFFFF), to(#F2F2F2)); background: -moz-linear-gradient(#FFFFFF, #F2F2F2); border-bottom: 1px solid #999; width: 100%; height: 100px; background-color: #FFF; margin: 0 auto; }
 	#banner { width: 960px; margin: 0 auto; color: #00C; padding-top: 10px; position: relative; }
 		/* NOTE: must give absolutely positioned elements height/width in IE 6/7 */
@@ -120,10 +120,9 @@
 		.comment-body code { white-space: pre; white-space: pre-wrap; word-wrap: break-word; }
 	#content .sharediv {}
 	textarea#comment { width: 99%; }
-	#commentform .comment-form-field { color: #70727C; display: inline-block; font-size: 0.9em; line-height: 1.3em; width: 32%; }
-		#commentform .comment-form-field label {}
-		#commentform .comment-form-field input { width: 99%; }
-		#commentform .comment-form-comment { line-height: 1.3em; margin: 0; }
+	.comment-form-author, .comment-form-email, .comment-form-url { color: #70727C; display: inline-block; font-size: 0.9em; line-height: 1.3em; width: 32%; }
+		.comment-form-author input, .comment-form-email input, .comment-form-url input { width: 99%; }
+		.comment-form-comment { line-height: 1.3em; margin: 0; }
 		#commentform input[type=submit] { background: -webkit-gradient(linear, left top, left bottom, from(#FBFCFB), to(#9D9E9D)); background: -moz-linear-gradient(#FBFCFB, #9D9E9D); background-color: #c0c2c0; border: 1px solid rgba(0, 0, 0, 0.6); -webkit-border-radius: 3px; -moz-border-radius: 3px; border-radius: 3px; -webkit-box-shadow: rgba(255, 255, 255, 0.4) 0 1px; moz-box-shadow: rgba(255, 255, 255, 0.4) 0 1px; box-shadow: rgba(255, 255, 255, 0.4) 0 1px; font-size: 0.9em; width: 99%; }
 	/* Footer */ 
 	#footer { background: -webkit-gradient(linear, left top, left bottom, from(#F2F2F2), to(#FFFFFF)); background: -moz-linear-gradient(#F2F2F2, #FFFFFF); background-color: #FFF; clear: both; color: #333; border-top: 1px solid #999; padding-bottom: 1em; }
@@ -149,92 +148,6 @@
 			#aboutfriends a { color: #C5060B; text-decoration: none; }
 			#aboutfriends a:hover { text-decoration: underline; }
 	.cleardiv { clear: both; }
-	/* Plugins */
-	#content .dp-highlighter ol { padding: 0; }
-	.syntaxhighlighter { width: 100%; margin: 1em 0; position: relative; overflow: auto; font-size: 1em;; _overflow-x: scroll; }
-	.syntaxhighlighter.nogutter { margin: 1em 1.5em; }
-	.syntaxhighlighter a, .syntaxhighlighter div, .syntaxhighlighter code, .syntaxhighlighter table, .syntaxhighlighter table td, .syntaxhighlighter table tr, .syntaxhighlighter table tbody, .syntaxhighlighter table thead, .syntaxhighlighter table caption, .syntaxhighlighter textarea { -moz-border-radius: 0 0 0 0; -webkit-border-radius: 0 0 0 0; background: none; border: 0; bottom: auto; float: none; height: auto; left: auto; line-height: 1.1em; margin: 0; outline: 0; overflow: visible; padding: 0; position: static; right: auto; text-align: left; top: auto; vertical-align: baseline; width: auto; box-sizing: content-box; font-family: "Consolas", "Bitstream Vera Sans Mono", "Courier New", Courier, monospace; font-weight: normal; font-style: normal; font-size: 1em; min-height: inherit; min-height: auto; }
-	.syntaxhighlighter.source { overflow: hidden }
-	.syntaxhighlighter .bold { font-weight: bold }
-	.syntaxhighlighter .italic { font-style: italic }
-	.syntaxhighlighter .line { white-space: pre }
-	.syntaxhighlighter table { width: 100% }
-	.syntaxhighlighter table caption { text-align: left; padding: .5em 0 0.5em 1em; }
-	.syntaxhighlighter table td.code { width: 100%; overflow-y: hidden; }
-	.syntaxhighlighter table td.code .container { position: relative }
-	.syntaxhighlighter table td.code .container textarea { box-sizing: border-box; position: absolute; left: 0; top: 0; width: 100%; height: 100%; border: none; background: white; padding-left: 1em; overflow: hidden; white-space: pre; }
-	.syntaxhighlighter table td.gutter .line { text-align: right; padding: 0 0.5em 0 1em; }
-	.syntaxhighlighter table td.code .line { padding: 0 1em }
-	.syntaxhighlighter.nogutter td.code .container textarea, .syntaxhighlighter.nogutter td.code .line { padding-left: 0em }
-	.syntaxhighlighter.show { display: block }
-	.syntaxhighlighter.collapsed table { display: none }
-	.syntaxhighlighter.collapsed .toolbar { padding: 0.1em 0.8em 0em 0.8em; font-size: 1em; position: static; width: auto; height: auto; }
-	.syntaxhighlighter.collapsed .toolbar span { display: inline; margin-right: 1em; }
-	.syntaxhighlighter.collapsed .toolbar span a { padding: 0; display: none; }
-	.syntaxhighlighter.collapsed .toolbar span a.expandSource { display: inline }
-	.syntaxhighlighter .toolbar { position: absolute; right: 1px; top: 1px; width: 11px; height: 11px; font-size: 10px; z-index: 10; }
-	.syntaxhighlighter .toolbar span.title { display: inline }
-	.syntaxhighlighter .toolbar a { display: block; text-align: center; text-decoration: none; padding-top: 1px; }
-	.syntaxhighlighter .toolbar a.expandSource { display: none }
-	.syntaxhighlighter.ie { font-size: .9em; padding: 1px 0 1px 0; }
-	.syntaxhighlighter.ie .toolbar { line-height: 8px }
-	.syntaxhighlighter.ie .toolbar a { padding-top: 0px }
-	.syntaxhighlighter.printing .line.alt1 .content, .syntaxhighlighter.printing .line.alt2 .content, .syntaxhighlighter.printing .line.highlighted .number, .syntaxhighlighter.printing .line.highlighted.alt1 .content, .syntaxhighlighter.printing .line.highlighted.alt2 .content { background: none }
-	.syntaxhighlighter.printing .line .number { color: #bbbbbb }
-	.syntaxhighlighter.printing .line .content { color: black }
-	.syntaxhighlighter.printing .toolbar { display: none }
-	.syntaxhighlighter.printing a { text-decoration: none }
-	.syntaxhighlighter.printing .plain, .syntaxhighlighter.printing .plain a { color: black }
-	.syntaxhighlighter.printing .comments, .syntaxhighlighter.printing .comments a { color: #008200 }
-	.syntaxhighlighter.printing .string, .syntaxhighlighter.printing .string a { color: blue }
-	.syntaxhighlighter.printing .keyword { color: #006699; font-weight: bold; }
-	.syntaxhighlighter.printing .preprocessor { color: gray }
-	.syntaxhighlighter.printing .variable { color: #aa7700 }
-	.syntaxhighlighter.printing .value { color: #009900 }
-	.syntaxhighlighter.printing .functions { color: #ff1493 }
-	.syntaxhighlighter.printing .constants { color: #0066cc }
-	.syntaxhighlighter.printing .script { font-weight: bold }
-	.syntaxhighlighter.printing .color1, .syntaxhighlighter.printing .color1 a { color: gray }
-	.syntaxhighlighter.printing .color2, .syntaxhighlighter.printing .color2 a { color: #ff1493 }
-	.syntaxhighlighter.printing .color3, .syntaxhighlighter.printing .color3 a { color: red }
-	.syntaxhighlighter.printing .break, .syntaxhighlighter.printing .break a { color: black }
-	.syntaxhighlighter { background-color: white }
-	.syntaxhighlighter .line.alt1 { background-color: white }
-	.syntaxhighlighter .line.alt2 { background-color: white }
-	.syntaxhighlighter .line.highlighted.alt1, .syntaxhighlighter .line.highlighted.alt2 { background-color: #e0e0e0 }
-	.syntaxhighlighter .line.highlighted.number { color: black }
-	.syntaxhighlighter table caption { color: black }
-	.syntaxhighlighter .gutter { color: #afafaf }
-	.syntaxhighlighter .gutter .line { border-right: 3px solid #6ce26c }
-	.syntaxhighlighter .gutter .line.highlighted { background-color: #6ce26c; color: white; }
-	.syntaxhighlighter.printing .line .content { border: none }
-	.syntaxhighlighter.collapsed { overflow: visible }
-	.syntaxhighlighter.collapsed .toolbar { color: blue; background: white; border: 1px solid #6ce26c; }
-	.syntaxhighlighter.collapsed .toolbar a { color: blue }
-	.syntaxhighlighter.collapsed .toolbar a:hover { color: red }
-	.syntaxhighlighter .toolbar { color: white; background: #6ce26c; border: none; }
-	.syntaxhighlighter .toolbar a { color: white }
-	.syntaxhighlighter .toolbar a:hover { color: black }
-	.syntaxhighlighter .plain, .syntaxhighlighter .plain a { color: black }
-	.syntaxhighlighter .comments, .syntaxhighlighter .comments a { color: #008200 }
-	.syntaxhighlighter .string, .syntaxhighlighter .string a { color: blue }
-	.syntaxhighlighter .keyword { color: #006699 }
-	.syntaxhighlighter .preprocessor { color: gray }
-	.syntaxhighlighter .variable { color: #aa7700 }
-	.syntaxhighlighter .value { color: #009900 }
-	.syntaxhighlighter .functions { color: #ff1493 }
-	.syntaxhighlighter .constants { color: #0066cc }
-	.syntaxhighlighter .script { font-weight: bold; color: #006699; background-color: none; }
-	.syntaxhighlighter .color1, .syntaxhighlighter .color1 a { color: gray }
-	.syntaxhighlighter .color2, .syntaxhighlighter .color2 a { color: #ff1493 }
-	.syntaxhighlighter .color3, .syntaxhighlighter .color3 a { color: red }
-	.syntaxhighlighter .keyword { font-weight: bold }
-	.syntaxhighlighter code { display: inline }
-	.delicious-button { margin: 0; padding: 0; height: 60px; width: 50px; color: #000; line-height: 10px; background: url('../images/delicous.png') center top no-repeat; font-family: Arial, Helvetica, sans-serif; }
-		.del-top { height: 44px; font-size: 10px; text-align: center; line-height: 10px; }
-		.delicious-button span { padding: 4px 0 0 0; display: block; height: 20px; font-size: 20px; font-weight: bold; text-align: center; line-height: 20px; }
-		.del-bot a { padding: 0 0 0 17px; height: 16px; color: #2B2BFF; font-weight: bold; font-size: 12px; text-align: left; text-decoration: none; line-height: 12px; }
-			.del-bot a:hover { color: #000; }
 	/* Contact Form */ 
 	.formcontainer { margin-left: 2em; }
 		.contact-form { width: 480px; }
@@ -265,5 +178,4 @@
 	h6 { font-size: 90%; font-style: italic; }
 	a:link, a:visited { color: #00c; font-weight: bold; text-decoration: underline; }
 	#content a:link:after, #content a:visited:after { content: " (" attr(href) ") "; }
-	.sociable { display: none;}
 }
