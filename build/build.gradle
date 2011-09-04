@@ -11,8 +11,8 @@ def cssOutputFile = "all.${version}-min.css"
 def jsOutputDir = "${outputDir}/js"
 def jsOutputFile = "all.${version}-min.js"
 def jshintConfig = 'build/jshint.json'
-def jshintOutput = 'jshint.xml'
-def csslintOutput = 'csslint.xml'
+def jshintOutput = "${outputDir}/jshint.xml"
+def csslintOutput = "${outputDir}/csslint.xml"
 def testDir = 'test'
 
 repositories {
@@ -38,7 +38,6 @@ dependencies {
 task clean << {
 	description = 'Cleans old artifacts'
 	ant.delete(dir: outputDir)
-	ant.delete(file: jshintOutput)
 }
 
 task init << {
@@ -77,7 +76,7 @@ task csslint(dependsOn: 'clean') << {
 	def proc = command.execute()
 	proc.consumeProcessOutput(sout, serr)
 	proc.waitForOrKill(2000)
-	new File("csslint.xml").write(sout.toString())
+	new File(csslintOutput).write(sout.toString())
 }
 
 task test(dependsOn: 'init') << {
@@ -154,11 +153,13 @@ task minifyCss(dependsOn: 'combineCss') << {
 task minifyJs(dependsOn: 'combineJs') << {
 	description = 'minify combined JS file'
 	def minifiedFilePath = "${jsOutputDir}/${jsOutputFile}"
-	ant.java(jar: 'lib/compiler.jar', fork: true) {
-		arg(value: '--js')
-		arg(value: "${jsOutputDir}/all.${version}.js")
-		arg(value: '--js_output_file')
-		arg(value: minifiedFilePath)
+	project.ant {
+		ant.taskdef(name: 'jscomp',  classname: 'com.google.javascript.jscomp.ant.CompileTask', classpath: configurations.js.asPath)
+		jscomp(compilationLevel: 'simple', warning: 'quiet', debug: 'false', output: minifiedFilePath) {
+			sources(dir: jsOutputDir) {
+				file(name: "all.${version}.js"){}
+			}
+		}
 	}
 	ant.gzip(src: minifiedFilePath, destfile: "${jsOutputDir}/all.${version}-min.js.gz")
 	ant.move(file: "${jsOutputDir}/all.${version}-min.js.gz", tofile: minifiedFilePath)
