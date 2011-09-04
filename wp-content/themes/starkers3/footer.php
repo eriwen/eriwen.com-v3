@@ -1,18 +1,19 @@
 </div>
 <footer id="footer">
-    <div id="footercontent">
-    <section id="abouteric">
-        <h4>Yes Me... Me. Me. Me.</h4>
-        <section id="twitter-container">
-        <figure><img id="ericpic" src="http://static.eriwen.com/images/eric4-85.jpeg" alt="Eric Wendelin's Photo" width="85" height="85" /></figure>
-        <blockquote id="twitter-status"><span class="arrow"><span> </span> </span><span id="status-text"><?php twitter_messages('eriwen', 1, false, false, false, true, true, false); ?></span><p id="twitter-link"><a href="http://twitter.com/eriwen/">@eriwen</a></p></blockquote>
-        </section>
-    </section>
-    <section id="aboutwork">
-	<h4>My Work</h4>
-	<p><span id="twc-logo"></span>I'm a Senior Software Engineer for Time Warner Cable, building cool new stuff for customers. I also spend my time developing (hopefully) useful <a href="https://github.com/eriwen/">open-source projects</a>.</p>
-    </section>
-    <section id="aboutfriends">
+	<div id="footercontent">
+	<section id="abouteric">
+		<h4>Yes Me... Me. Me. Me.</h4>
+		<section id="twitter-container">
+		<figure><img id="ericpic" src="http://static.eriwen.com/images/eric4-85.jpeg" alt="Eric Wendelin's Photo" width="85" height="85" /></figure>
+		<blockquote id="twitter-status"><span class="arrow"><span> </span> </span><span id="status-text"><?php twitter_messages('eriwen', 1, false, false, false, true, true, false); ?></span><p id="twitter-link"><a href="http://twitter.com/eriwen/">@eriwen</a></p></blockquote>
+		</section>
+	</section>
+	<section id="testimonials">
+	<h4>Testimonials</h4>
+	<div><blockquote>Not a douchebag, nor an asshole.</blockquote>
+		<p id="quotedperson"><a href="http://www.linkedin.com/in/bryannoll">Brian Noll</a></p></div>
+	</section>
+	<section id="aboutfriends">
 	<h4>Smart people</h4>
 	<ul><li><a href="http://jroller.com/aalmiray/" rel="contact" title="Andres Almiray&#8217;s Weblog">Andres Almiray</a></li>
 	<li><a href="http://www.linkedin.com/in/bryannoll" rel="friend" title="Brian Noll on LinkedIn">Brian Noll</a></li>
@@ -23,12 +24,12 @@
 	<li><a href="http://johnnywey.wordpress.com/" rel="friend met co-worker" title="a regular expression">Johnny Wey</a></li>
 	<li><a href="http://www.catonmat.net/" rel="contact" title="programming, hacking, software reuse, software ideas, computer security, google and technology">Peteris Krumins</a></li>
 	<li><a href="http://www.nomachetejuggling.com/" rel="friend met co-worker" title="Absolutely No Machete Juggling">Rod Hilton</a></li></ul>
-    </section>
+	</section>
 </div>
 <div class="cleardiv"> </div>
 </footer>
 <!-- Non-obfuscated js source at http://eriwen.com/js/main.js -->
-<script type="text/javascript" src="http://static.eriwen.com/js/all.6b31b95-min.js"></script>
+<script type="text/javascript" src="http://static.eriwen.com/js/all.6b42b2b-min.js"></script>
 <?php wp_footer(); ?>
 <script type="text/javascript">
 function foo(){bar('blah')} function bar(blah){thing()} function thing(){alert(printStackTrace().join('\n\n'))}
