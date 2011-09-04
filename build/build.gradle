@@ -67,7 +67,7 @@ task csslint(dependsOn: 'clean') << {
 		'empty-rules', 'errors', 'floats', 'font-faces', 'font-sizes', 'gradients', 'important',
 		'overqualified-elements', 'regex-selectors', 'rules-count', 'vendor-prefix', 'width-100',
 		'zero-units']
-	def csslintOptions = "--rules=${csslintRules.join(',')} --format=csslint-xml"
+	def csslintOptions = "--rules=${csslintRules.join(',')} --format=lint-xml"
 	
 	def sout = new StringBuffer()
 	def serr = new StringBuffer()
