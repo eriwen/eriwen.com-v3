@@ -40,6 +40,7 @@
 	#wrap { width: 960px; clear: both; margin: 0 auto; }
 	/* Content */
 	#content { color: #333; float: left; width: 660px; background-color: #FFF; min-height: 900px; }
+	#content p > code { background-color: #EEE; }
 	#content a { border-bottom: 0px solid #FFF; text-decoration: none; color: #C5060B; -webkit-transition:border-bottom-color .3s ease-in-out; -moz-transition:border-bottom-color .2s ease-in-out; -o-transition:border-bottom-color .2s ease-in-out; transition:border-bottom-color .3s ease-in-out; *word-break: break-all; }
 		#content a:hover { border-bottom: 1px solid #C5060B; }
 	#content img { border: 1px solid #CCC; padding: 4px; }
@@ -141,8 +142,11 @@
 				#twitter-status .arrow { border-bottom: 0px solid #F8F8F8; border-right: 20px solid #999; border-top: 15px solid #F8F8F8; position: absolute; left: -20px; top: 5px; height: 0; width: 0; line-height: 0; }
 					#twitter-status .arrow span { border-bottom: 0px solid transparent; border-right: 20px solid #F8F8F8; border-top: 8px solid transparent; width: 0; height: 0; line-height: 0; position: absolute; left: -2px; top: -8px; }
 			#twitter-link { text-align: right; margin: 0; line-height: 1em; font-style: normal; }
-		#aboutwork { width: 400px; }
-			#twc-logo { background: transparent url('../images/sprites3.png') no-repeat; background-position: 0 -334px; width: 133px; height: 53px; float: right; }
+		#testimonials { width: 400px; }
+			#testimonials div { margin-top: 1.4em; }
+			#testimonials blockquote { margin: 1em; background: transparent url('data:image/gif;base64,R0lGODlhGAANAJEDAD41NQICAvT09P///yH5BAEAAAMALAAAAAAYAA0AAAI33IIIZqkMgUNMTshmajrg03Ha13ngSKKn84lbdrWwib2yDeGftWC8PLDQKrpIUQgUPDDKQK9VAAA7') no-repeat bottom right; }
+			#testimonials blockquote:first-letter { padding-left: 30px; background: transparent url('data:image/gif;base64,R0lGODlhGAANAJEDAAAAADYrKxMMDP///yH5BAEAAAMALAAAAAAYAA0AAAI6nC8Qx+AMhwMxzNgetBrLngmekVDRNX4m5Ijp1CKwgpWwOzsLZMNGDiIBf8NTzsCZYYqqicuIOighBQA7') no-repeat left top; }
+			#quotedperson { text-align: right; }
 		#aboutfriends { width: 200px; }
 			#aboutfriends li { line-height: 1.5em; }
 			#aboutfriends a { color: #C5060B; text-decoration: none; }
@@ -166,8 +170,7 @@
 }
 @media print { 
 	body, #content { width: 100%; margin: 0; float: none; background-color: #fff; }
-	#sidebar { display: none; }
-	#footer { display: none; }
+	#header, #sidebar, #footer, #share, #comments { display: none; }
 	body { font: 1em Georgia, "Times New Roman", Times, serif; color: #000; }
 	h1,h2,h3,h4,h5,h6 { font-family: Helvetica, Arial, sans-serif; color: #000; }
 	article, aside, dialog, figure, footer, header, hgroup, menu, nav, section { display: block; }
