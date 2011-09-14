@@ -31,8 +31,8 @@ dependencies {
 	antlibs 'org.springframework.build:org.springframework.build.aws.ant:3.0.5.RELEASE',
 			'net.java.dev.jets3t:jets3t:0.7.3'
 	html 'com.googlecode.htmlcompressor:htmlcompressor:1.4'
-	js 'com.google.javascript:closure-compiler:r1043'
-	css 'com.yahoo.platform.yui:yuicompressor:2.4.6'
+	js 'com.google.javascript:closure-compiler:r+'
+	css 'com.yahoo.platform.yui:yuicompressor:2.4.+'
 }
 
 task clean << {
@@ -73,10 +73,7 @@ task csslint(dependsOn: 'clean') << {
 	def serr = new StringBuffer()
 	def command = "csslint ${csslintOptions} css/style.css"
 	println command
-	def proc = command.execute()
-	proc.consumeProcessOutput(sout, serr)
-	proc.waitForOrKill(2000)
-	new File(csslintOutput).write(sout.toString())
+	new File(csslintOutput).write(command.execute().text)
 }
 
 task test(dependsOn: 'init') << {
