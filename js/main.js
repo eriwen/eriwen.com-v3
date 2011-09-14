@@ -81,7 +81,7 @@
 		 * Event handler for scroll events loading comments after a certain timeout to optimize initial page load.
 		 */
 		loadCommentsLater: function() {
-			Page.fn.removeEvent(window, 'scroll', Page.fn.loadComments);
+			Page.fn.removeEvent(window, 'scroll', Page.fn.loadCommentsLater);
 			window.setTimeout(Page.fn.loadComments, 17);
 		},
 		/**
