@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html>
-<!--____            _                    
-   / __ \  ___ _ __(_)_      _____ _ __  
-  / / _` |/ _ \ '__| \ \ /\ / / _ \ '_ \ 
- | | (_| |  __/ |  | |\ V  V /  __/ | | |
-  \ \__,_|\___|_|  |_| \_/\_/ \___|_| |_|
-   \____/-->
+<!--___            _
+  / __ \  ___ _ __(_)_      _____ _ __
+ / / _` |/ _ \ '__| \ \ /\ / / _ \ '_ \ 
+| | (_| |  __/ |  | |\ V  V /  __/ | | |
+ \ \__,_|\___|_|  |_| \_/\_/ \___|_| |_|
+  \____/-->
 <head>
 <base href="http://eriwen.com/" />
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="language" content="en, sv" /><meta http-equiv="X-UA-Compatible" content="chrome=1" /><meta name="verify-v1" content="P2xRqLl8A6YG9QoZdBuhksLUfzrww7khJZnI2X8TID8=" /><meta name="y_key" content="62ed107e006109d4" /><meta name="author" content="Eric Wendelin" />
@@ -16,8 +16,8 @@ if (is_home()) { bloginfo('name'); echo " - "; bloginfo('description'); $paged =
 } elseif (is_single() || is_page()) {single_post_title();
 } elseif (is_search()) {bloginfo('name'); echo " search results: "; echo wp_specialchars($s);
 } else { wp_title('',true); } ?></title>
-<!-- Unminified CSS at http://static.eriwen.com/css/all.6b42b2b.css -->
-<link rel="stylesheet" href="http://static.eriwen.com/css/all.6b42b2b-min.css" type="text/css" />
+<!-- Unminified CSS at http://static.eriwen.com/css/all.6b62c09.css -->
+<link rel="stylesheet" href="http://static.eriwen.com/css/all.6b62c09-min.css" type="text/css" />
 <!--[if lt IE 9]>
 <script type="text/javascript" src="http://static.eriwen.com/js/html5-min.js"></script>
 <![endif]-->
@@ -29,18 +29,18 @@ if (is_home()) { bloginfo('name'); echo " - "; bloginfo('description'); $paged =
 <?php if (is_singular() && get_option( 'thread_comments' )) wp_head(); ?>
 </head>
 <body>
-    <header id="header">
-        <div id="banner" role="banner">
-            <h1 id="bannertext"><a href="http://eriwen.com/" title="Eric Wendelin's Blog">Eric Wendelin's Blog</a></h1>
-            <nav>
+	<header id="header">
+		<div id="banner" role="banner">
+			<h1 id="bannertext"><a href="http://eriwen.com/" title="Eric Wendelin's Blog">Eric Wendelin's Blog</a></h1>
+			<nav>
 		<h2>[<a href="http://eriwen.com/tag/programming/" title="Programming posts">programming</a>,
 			<a href="http://eriwen.com/category/productivity/" title="Productivity posts">productivity</a>,
 			<a href="http://eriwen.com/category/tools/" title="Open-Source tools posts">tools</a>]</h2>
-            </nav>
+			</nav>
 	<div id="search-container" role="search">
-	<form action="http://eriwen.com" method="get" id="searchform"><input type="search" value="" id="searchinput" name="s" results="4" placeholder="Search posts..." /></form>
+	<form action="http://eriwen.com" method="get" id="searchform"><input type="search" value="" id="searchinput" name="s" results="4" placeholder="Search posts..." size="29"/></form>
 	<a href="http://eriwen.com/archives/" title="Blog archives" id="archive-link">archives</a>
 	</div>
-        </div>
-    </header>
-    <div id="wrap">
+		</div>
+	</header>
+	<div id="wrap">
