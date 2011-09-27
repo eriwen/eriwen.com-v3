@@ -2,6 +2,7 @@
 target
 node_modules
 .gradle
-build/gradle.properties
+gradle
+gradle.properties
 jshint.xml
 csslint.xml
