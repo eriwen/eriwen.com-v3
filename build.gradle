@@ -1,3 +1,18 @@
+buildscript {
+	repositories {
+		mavenLocal()
+		mavenCentral()
+	}
+	dependencies {
+		classpath 'com.eriwen:gradle-css-plugin:0.1-SNAPSHOT'
+	}
+}
+
+apply plugin: 'maven' //What does this do here again?
+apply plugin: 'css'
+
+import org.eriwen.gradle.MinifyJs
+
 defaultTasks 'all'
 
 // Short version string that which we can reverse engineer the date from
@@ -18,17 +33,14 @@ repositories {
 
 configurations {
 	s3libs
-	js
-	css
 	html
 }
 
 dependencies {
+/*	classpath 'com.eriwen:gradle-css-plugin:0.1-SNAPSHOT'*/
 	s3libs 'org.springframework.build:org.springframework.build.aws.ant:3.0.5.RELEASE',
 			'net.java.dev.jets3t:jets3t:0.7.3'
 	html 'com.googlecode.htmlcompressor:htmlcompressor:1.4'
-	js 'com.google.javascript:closure-compiler:r1352'
-	css 'com.yahoo.platform.yui:yuicompressor:2.4.6'
 }
 /*
 sourceSets {
@@ -37,7 +49,7 @@ sourceSets {
 	}
 }*/
 
-task clean(type: Delete, description: 'Cleans old artifacts') {
+task doclean(type: Delete, description: 'Cleans old artifacts') {
 	delete outputDir
 }
 
@@ -45,18 +57,22 @@ task init(type: Directory, description: 'Creates artifact output directories') {
 /*	outputs = {dir: outputDir}*/
 /*	outputs.dir = new File(outputDir)*/
 	doLast {
-		(file(cssOutputDir)).mkdirs()
-		(file(jsOutputDir)).mkdirs()
+		file(cssOutputDir).mkdirs()
+		file(jsOutputDir).mkdirs()
 	}
 }
 
 /*init.outputs.dir = new File(outputDir)*/
 
 task wrapper(type: Wrapper) {
-	gradleVersion = '0.9.2'
+	gradleVersion = '1.0-milestone-4'
 }
 
 task jshint(type: Exec, dependsOn: 'init', description: 'runs jshint on all non-test and lib JS files') {
+	// FIXME: do I really have to do this?
+	doFirst {
+		file("${outputDir}/jshint.xml").write('')
+	}
 	inputs = {file: file('js/main.js')}
 	outputs = {file: file("${outputDir}/jshint.xml")}
 	
@@ -68,6 +84,9 @@ task jshint(type: Exec, dependsOn: 'init', description: 'runs jshint on all non-
 }
 
 task csslint(type: Exec, dependsOn: 'init', description: 'runs csslint on all relevant CSS files') {
+	doFirst {
+		file("${outputDir}/csslint.xml").write('')
+	}
 	inputs = {file: file('css/style.css')}
 	outputs = {file: file("${outputDir}/csslint.xml")}
 	
@@ -145,36 +164,36 @@ task combineJs(dependsOn: 'init') {
 
 task minifyHtml(description: 'minify HTML in different parts of template') {}
 
-task minifyCss(dependsOn: 'combineCss', description: 'minify combined CSS file') {
+minifyCss(dependsOn: 'combineCss', description: 'minify combined CSS file') {
+	inputFile = "${cssOutputDir}/all.${version}.css"
+	outputFile = "${cssOutputDir}/${cssOutputFile}"
+	lineBreakPos = 0
+	
 	doLast {
-		ant.java(jar: 'lib/yuicompressor-2.4.6.jar', fork: true) {
-			arg(value: '--line-break')
-			arg(value: '0')
-			arg(value: "${cssOutputDir}/all.${version}.css")
-			arg(value: '-o')
-			arg(value: "${cssOutputDir}/${cssOutputFile}")
-		}
-		ant.gzip(src: "${cssOutputDir}/${cssOutputFile}",
-				destfile: "${cssOutputDir}/${cssOutputFile}.gz")
-		ant.move(file: "${cssOutputDir}/${cssOutputFile}.gz",
-				tofile: "${cssOutputDir}/${cssOutputFile}")
+		ant.gzip(src: outputFile, destfile: "${outputFile}.gz")
+		ant.move(file: "${outputFile}.gz", tofile: outputFile)
 	}
 }
 
-task minifyJs(dependsOn: 'combineJs', description: 'minify combined JS file') {
-	def minifiedFilePath = "${jsOutputDir}/${jsOutputFile}"
+/*task minifyCss(type: MinifyCss, dependsOn: 'combineCss', description: 'minify combined CSS file') {
+	inputFile = "${cssOutputDir}/all.${version}.css"
+	outputFile = "${cssOutputDir}/${cssOutputFile}"
+	lineBreakPos = 0
 	
 	doLast {
-		project.ant {
-			ant.taskdef(name: 'jscomp',  classname: 'com.google.javascript.jscomp.ant.CompileTask', classpath: configurations.js.asPath)
-			jscomp(compilationLevel: 'simple', warning: 'quiet', debug: 'false', output: minifiedFilePath) {
-				sources(dir: jsOutputDir) {
-					file(name: "all.${version}.js"){}
-				}
-			}
-		}
-		ant.gzip(src: minifiedFilePath, destfile: "${jsOutputDir}/all.${version}-min.js.gz")
-		ant.move(file: "${jsOutputDir}/all.${version}-min.js.gz", tofile: minifiedFilePath)
+		ant.gzip(src: outputFile, destfile: "${outputFile}.gz")
+		ant.move(file: "${outputFile}.gz", tofile: outputFile)
+	}
+}*/
+
+task minifyJs(type: MinifyJs, dependsOn: 'combineJs', description: 'minify combined JS file') {
+	inputFiles = ["${jsOutputDir}/all.${version}.js"]
+	outputFile = "${jsOutputDir}/${jsOutputFile}"
+	warningLevel = 'QUIET'
+	
+	doLast {
+		ant.gzip(src: outputFile, destfile: "${jsOutputDir}/all.${version}-min.js.gz")
+		ant.move(file: "${jsOutputDir}/all.${version}-min.js.gz", tofile: outputFile)
 	}
 }
 
@@ -218,7 +237,7 @@ task uploadArtifactsToS3(description: 'Uploads CSS and JS to AWS S3') {
 	}
 }
 
-task all(dependsOn: ['clean', 'jshint', 'csslint', 'test', 'updateIncludes', 'uploadArtifactsToS3']) {
+task all(dependsOn: ['doclean', 'jshint', 'csslint', 'test', 'updateIncludes', 'uploadArtifactsToS3']) {
 	doLast {
 		println "Time to do 'git commit -am \"Releasing version ${version}\" && git push origin master'"
 	}
