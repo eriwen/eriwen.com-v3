@@ -1,16 +1,14 @@
 buildscript {
 	repositories {
 		mavenLocal()
-/*		mavenRepo urls: 'https://oss.sonatype.org/content/repositories/snapshots'*/
 		mavenCentral()
 	}
 	dependencies {
-		classpath 'com.eriwen:gradle-css-plugin:0.1-SNAPSHOT'
-		classpath 'com.eriwen:gradle-js-plugin:0.1-SNAPSHOT'
+		classpath 'com.eriwen:gradle-css-plugin:0.1'
+		classpath 'com.eriwen:gradle-js-plugin:0.1'
 	}
 }
 
-apply plugin: 'maven' //What does this do here again?
 apply plugin: 'css'
 apply plugin: 'js'
 
@@ -26,22 +24,22 @@ def jsOutputFile = "all.${version}-min.js"
 def testDir = file("${projectDir}/test")
 
 repositories {
-	mavenRepo urls: 'http://repository.springsource.com/maven/bundles/release'
+	mavenRepo url: 'http://repository.springsource.com/maven/bundles/release'
 	mavenCentral()
 }
 
 configurations {
 	s3libs
-	html
 }
 
 dependencies {
 	s3libs 'org.springframework.build:org.springframework.build.aws.ant:3.0.5.RELEASE',
 			'net.java.dev.jets3t:jets3t:0.7.3'
-	html 'com.googlecode.htmlcompressor:htmlcompressor:1.4'
 }
 
 task init(type: Directory, description: 'Creates artifact directories') {
+	outputs.dir(buildDir)
+	
 	// FIXME: this is idiotic, but necessary because the Exec tasks 
 	// check directory existence in the configuration phase of the build
 	file(buildDir).mkdirs()
@@ -68,7 +66,6 @@ task jshint(type: Exec, dependsOn: 'init', description: 'runs jshint on all non-
 task csslint(type: Exec, dependsOn: 'init', description: 'runs csslint on all relevant CSS files') {
 	inputs.file file('css/style.css')
 	outputs.file file("${buildDir}/csslint.xml")
-	new File("${buildDir}/csslint.xml").write('')
 	
 	def csslintRules = ['adjoining-classes', 'box-model', 'display-property', 'grouping',
 		'empty-rules', 'errors', 'floats', 'font-faces', 'font-sizes', 'gradients', 'important',
@@ -124,29 +121,27 @@ task test(dependsOn: 'init', description: 'runs Javascript unit tests with Jasmi
 	}
 }
 
-processCss {
+css {
 	dependsOn << 'init'
-	inputs.dir file("${projectDir}/css")
-	outputs.dir file("${buildDir}/${cssOutputFile}")
+	inputs.file file("${projectDir}/css/style.css")
+	outputs.file file("${buildDir}/${cssOutputFile}")
 
 	input = files("${projectDir}/css")
 	output = file("${buildDir}/${cssOutputFile}")
 	lineBreakPos = 0
 }
 
-processJs {
+js {
 	dependsOn << 'init'
-	inputs.dir file("${projectDir}/js")
-	outputs.dir file("${buildDir}/${jsOutputFile}")
+	inputs.file file("${projectDir}/js/main.js")
+	outputs.file file("${buildDir}/${jsOutputFile}")
 
 	input = fileTree(dir: "${projectDir}/js", include: "**/*.js", excludes: ["html5-min.js", "sh.3-min.js"])
 	output = file("${buildDir}/${jsOutputFile}")
 	warningLevel = 'QUIET'
 }
 
-task minifyHtml(description: 'minify HTML in different parts of template') {}
-
-task updateIncludes(dependsOn: ['processCss', 'processJs'], description: 'Update header.php and footer.php with new CSS/JS versions') {
+task updateIncludes(dependsOn: ['css', 'js'], description: 'Update header.php and footer.php with new CSS/JS versions') {
 	inputs.files files("${projectDir}/js", "${projectDir}/css")
 	outputs.files files("${phpSrcDir}/header.php", "${phpSrcDir}/footer.php")
 	
