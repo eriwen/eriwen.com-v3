@@ -24,7 +24,7 @@ def jsOutputFile = "all.${version}-min.js"
 def testDir = file("${projectDir}/test")
 
 repositories {
-	mavenRepo url: 'http://repository.springsource.com/maven/bundles/release'
+	mavenRepo urls: 'http://repository.springsource.com/maven/bundles/release'
 	mavenCentral()
 }
 
