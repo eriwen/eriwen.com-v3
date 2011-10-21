@@ -16,8 +16,8 @@ if (is_home()) { bloginfo('name'); echo " - "; bloginfo('description'); $paged =
 } elseif (is_single() || is_page()) {single_post_title();
 } elseif (is_search()) {bloginfo('name'); echo " search results: "; echo wp_specialchars($s);
 } else { wp_title('',true); } ?></title>
-<!-- Unminified CSS at http://static.eriwen.com/css/all.6b8c498.css -->
-<link rel="stylesheet" href="http://static.eriwen.com/css/all.6b8c498-min.css" type="text/css" />
+<!-- Unminified CSS at http://static.eriwen.com/css/all.6bb56af.css -->
+<link rel="stylesheet" href="http://static.eriwen.com/css/all.6bb56af-min.css" type="text/css" />
 <!--[if lt IE 9]>
 <script type="text/javascript" src="http://static.eriwen.com/js/html5-min.js"></script>
 <![endif]-->
@@ -27,12 +27,25 @@ if (is_home()) { bloginfo('name'); echo " - "; bloginfo('description'); $paged =
 <link rel="alternate" type="application/atom+xml" title="Atom 0.3" href="http://feeds2.feedburner.com/EricWendelin" />
 <link rel="pingback" href="<?php bloginfo('pingback_url'); ?>" />
 <?php if (is_singular() && get_option( 'thread_comments' )) wp_head(); ?>
+<script type="text/javascript">
+function foo(){bar('blah')} function bar(blah){thing()} function thing(){alert(printStackTrace().join('\n\n'))}
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-721302-4']);
+_gaq.push(['_trackPageview']);
+_gaq.push(['_trackPageLoadTime']);
+
+(function() {
+	var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+	var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+</script>
 </head>
 <body>
 	<header id="header">
 		<div id="banner" role="banner">
 			<h1 id="bannertext"><a href="http://eriwen.com/" title="Eric Wendelin's Blog">Eric Wendelin's Blog</a></h1>
-			<nav>
+			<nav role="popular tags">
 		<h2>[<a href="http://eriwen.com/tag/programming/" title="Programming posts">programming</a>,
 			<a href="http://eriwen.com/category/productivity/" title="Productivity posts">productivity</a>,
 			<a href="http://eriwen.com/category/tools/" title="Open-Source tools posts">tools</a>]</h2>

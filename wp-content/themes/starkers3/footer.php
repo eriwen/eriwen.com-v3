@@ -11,33 +11,23 @@
 	<section id="testimonials">
 	<h4>Testimonials</h4>
 	<div><blockquote>Not a douchebag, nor an asshole.</blockquote>
-		<p id="quotedperson"><a href="http://www.linkedin.com/in/bryannoll">Brian Noll</a></p></div>
+		<p id="quotedperson"><a href="http://www.linkedin.com/in/bryannoll">Bryan Noll</a></p></div>
 	</section>
 	<section id="aboutfriends">
 	<h4>Smart people</h4>
 	<ul><li><a href="http://jroller.com/aalmiray/" rel="contact" title="Andres Almiray&#8217;s Weblog">Andres Almiray</a></li>
-	<li><a href="http://www.linkedin.com/in/bryannoll" rel="friend met co-worker" title="Brian Noll on LinkedIn">Brian Noll</a></li>
+	<li><a href="http://www.linkedin.com/in/bryannoll" rel="friend met co-worker" title="Bryan Noll on LinkedIn">Bryan Noll</a></li>
 	<li><a href="http://css-tricks.com" rel="friend" title="CSS Tricks">Chris Coyier</a></li>
 	<li><a href="http://davidwalsh.name/" rel="friend" title="PHP, MySQL, CSS, Javascript, MooTools, and Everything Else">David Walsh</a></li>
 	<li><a href="http://johnnywey.wordpress.com/" rel="friend met co-worker" title="a regular expression">Johnny Wey</a></li>
-	<li><a href="http://www.catonmat.net/" rel="contact" title="programming, hacking, software reuse, software ideas, computer security, google and technology">Peteris Krumins</a></li>
+	<li><a href="http://www.catonmat.net/" rel="friend" title="programming, hacking, software reuse, software ideas, computer security, google and technology">Peteris Krumins</a></li>
 	<li><a href="http://www.nomachetejuggling.com/" rel="friend met co-worker" title="Absolutely No Machete Juggling">Rod Hilton</a></li></ul>
 	</section>
 </div>
 <div class="cleardiv"> </div>
 </footer>
 <!-- Non-obfuscated js source at http://eriwen.com/js/main.js -->
-<script type="text/javascript" src="http://static.eriwen.com/js/all.6b8c498-min.js"></script>
+<script type="text/javascript" src="http://static.eriwen.com/js/all.6bb56af-min.js"></script>
 <?php wp_footer(); ?>
-<script type="text/javascript">
-function foo(){bar('blah')} function bar(blah){thing()} function thing(){alert(printStackTrace().join('\n\n'))}
-var _gaq = _gaq || [];
-_gaq.push(['_setAccount', 'UA-721302-4']); _gaq.push(['_trackPageview']);
-Page.prototype.addEvent(window, 'load', function() {
-  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-  ga.src = 'http://www.google-analytics.com/ga.js';
-  window.setTimeout(function(){document.getElementsByTagName('head')[0].appendChild(ga)},0);
-});
-</script>
 </body>
 </html>

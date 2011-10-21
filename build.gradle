@@ -33,8 +33,8 @@ configurations {
 }
 
 dependencies {
-	s3libs 'org.springframework.build:org.springframework.build.aws.ant:3.0.5.RELEASE',
-			'net.java.dev.jets3t:jets3t:0.7.3'
+	s3libs 'org.springframework.build:org.springframework.build.aws.ant:3.0.6.RELEASE',
+			'net.java.dev.jets3t:jets3t:0.8.1'
 }
 
 task init(type: Directory, description: 'Creates artifact directories') {
@@ -64,7 +64,7 @@ task jshint(type: Exec, dependsOn: 'init', description: 'runs jshint on all non-
 }
 
 task csslint(type: Exec, dependsOn: 'init', description: 'runs csslint on all relevant CSS files') {
-	inputs.file file('css/style.css')
+	inputs.files fileTree(dir: "${projectDir}/css", include: "**/*.css")
 	outputs.file file("${buildDir}/csslint.xml")
 	
 	def csslintRules = ['adjoining-classes', 'box-model', 'display-property', 'grouping',
@@ -72,14 +72,11 @@ task csslint(type: Exec, dependsOn: 'init', description: 'runs csslint on all re
 		'overqualified-elements', 'regex-selectors', 'rules-count', 'vendor-prefix', 'width-100',
 		'zero-units']
 	
-	commandLine = ["csslint", "--rules=${csslintRules.join(',')}", "--format=lint-xml", "css/style.css"]
+	commandLine = ["csslint", "--rules=${csslintRules.join(',')}", "--format=lint-xml", "css"]
 	standardOutput = new BufferedOutputStream(new FileOutputStream(file("${buildDir}/csslint.xml")))
 }
 
 task test(dependsOn: 'init', description: 'runs Javascript unit tests with Jasmine and PhantomJS') {
-	inputs.dir file("${projectDir}/js")
-	outputs.dir file(buildDir)
-	
 	doLast {
 		def specs = []
 		testDir.eachFile {
@@ -123,26 +120,52 @@ task test(dependsOn: 'init', description: 'runs Javascript unit tests with Jasmi
 
 css {
 	dependsOn << 'init'
-	inputs.file file("${projectDir}/css/style.css")
-	outputs.file file("${buildDir}/${cssOutputFile}")
+	inputs.dir file("${projectDir}/css")
+	outputs.dir file(buildDir)
 
 	input = files("${projectDir}/css")
 	output = file("${buildDir}/${cssOutputFile}")
-	lineBreakPos = 0
+	lineBreakPos = -1
+}
+
+combineCss {
+	dependsOn << 'init'
+	input = files("${projectDir}/css/*.css")
+	output = file("${buildDir}/combined.css")
+}
+
+// FIXME: why does YUI Compressor hate me? It's cutting off the combined files in the middle
+minifyCss {
+	dependsOn << 'combineCss'
+	input = file("${buildDir}/combined.css")
+	output = file("${buildDir}/${cssOutputFile}")
+	lineBreakPos = -1
+}
+
+gzipCss {
+	dependsOn << 'combineCss'
+	input = file("${buildDir}/combined.css")
+	output = file("${buildDir}/${cssOutputFile}")
 }
 
 js {
 	dependsOn << 'init'
-	inputs.file file("${projectDir}/js/main.js")
-	outputs.file file("${buildDir}/${jsOutputFile}")
+	inputs.dir file("${projectDir}/js")
+	outputs.dir file(buildDir)
 
-	input = fileTree(dir: "${projectDir}/js", include: "**/*.js", excludes: ["html5-min.js", "sh.3-min.js"])
+	def xRegExpFile = fileTree(dir: "${projectDir}/js/sh", include: 'XRegExp.js')
+	def shCoreFile = fileTree(dir: "${projectDir}/js/sh", include: 'shCore.js')
+	def shBrushFiles = fileTree(dir: "${projectDir}/js/sh", include: '**/shBrush*.js')
+	def mainFiles = fileTree(dir: "${projectDir}/js", include: '*.js', excludes: ['html5-min.js', 'sh.3-min.js'])
+	
+	// Must include syntax highlighter core file first
+	input = mainFiles + xRegExpFile + shCoreFile + shBrushFiles
 	output = file("${buildDir}/${jsOutputFile}")
 	warningLevel = 'QUIET'
 }
 
-task updateIncludes(dependsOn: ['css', 'js'], description: 'Update header.php and footer.php with new CSS/JS versions') {
-	inputs.files files("${projectDir}/js", "${projectDir}/css")
+task updateIncludes(dependsOn: ['gzipCss', 'js'], description: 'Update header.php and footer.php with new CSS/JS versions') {
+	inputs.files files("${projectDir}/js", "${projectDir}/css", "build.gradle")
 	outputs.files files("${phpSrcDir}/header.php", "${phpSrcDir}/footer.php")
 	
 	def headerFile = file("${phpSrcDir}/header.php")
@@ -156,8 +179,9 @@ task updateIncludes(dependsOn: ['css', 'js'], description: 'Update header.php an
 	}
 }
 
-task uploadArtifactsToS3(description: 'Uploads CSS and JS to AWS S3') {
-	inputs.files files("${phpSrcDir}/header.php", "${phpSrcDir}/footer.php")
+task uploadArtifactsToS3(dependsOn: ['gzipCss', 'js'], description: 'Uploads CSS and JS to AWS S3') {
+	inputs.files files("${phpSrcDir}/header.php", "${phpSrcDir}/footer.php", "build.gradle")
+	outputs.dir file(buildDir)
 	
 	doLast {
 		project.ant {

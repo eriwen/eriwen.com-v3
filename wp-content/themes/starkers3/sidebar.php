@@ -11,15 +11,25 @@
 	<section id="projects-container" class="section">
 		<header><h3>Projects</h3></header>
 		<nav><ul>
+		<li><a href="https://github.com/eriwen/gradle-css-plugin" title="CSS Plugin for Gradle">Gradle CSS plugin</a></li>
+		<li><a href="https://github.com/eriwen/gradle-js-plugin" title="Javascript Plugin for Gradle">Gradle JS plugin</a></li>
 		<li><a href="https://github.com/eriwen/griffon-jython" title="Jython plugin for Griffon">Griffon Jython plugin</a></li>
-		<li><a href="http://github.com/eriwen/groovyrtm" title="Groovy API for Remember The Milk">GroovyRTM</a></li>
+		<li><a href="https://github.com/eriwen/groovyrtm" title="Groovy API for Remember The Milk">GroovyRTM</a></li>
+		<li><a href="https://github.com/stubbornella/csslint" title="CSS Lint">CSS Lint</a></li>
 		<li><a href="http://stacktracejs.org" title="Micro-library to get a Javascript stacktrace on all browsers">stacktrace.js</a></li>
-		<li><a href="http://github.com/eriwen/cheqlist-javafx" title="JavaFX desktop application for Remember The Milk">Cheqlist</a></li>
+		<li><a href="https://github.com/eriwen/cheqlist-javafx" title="JavaFX desktop application for Remember The Milk">Cheqlist</a></li>
 		</ul></nav>
 	</section>
 	<section id="featured-container" class="section" role="navigation">
 		<header><h3>Featured</h3></header>
-		<ul><li><a href="http://eriwen.com/bash/effective-shorthand/">Effective bash shorthand</a></li><li><a href="http://eriwen.com/tools/wikify-yourself/">Every programmer should have a Tiddlywiki</a></li><li><a href="http://eriwen.com/productivity/find-is-a-beautiful-tool/">Find is a beautiful tool</a></li><li><a href="http://eriwen.com/books/best-algorithms-book/">Best algorithms book I ever read</a></li><li><a href="http://eriwen.com/tools/grep-is-a-beautiful-tool/">grep is a beautiful tool</a></li><li><a href="http://eriwen.com/javascript/js-stack-trace/">Javascript stacktrace in any browser</a></li><li><a href="http://eriwen.com/javascript/highlight-search-results-with-js/">Highlight search results with JavaScript and CSS</a></li></ul>
+		<ul><li><a href="http://eriwen.com/bash/effective-shorthand/">Effective bash shorthand</a></li>
+		<li><a href="http://eriwen.com/tools/wikify-yourself/">Every programmer should have a Tiddlywiki</a></li>
+		<li><a href="http://eriwen.com/tools/continuous-integration-for-javascript/">Continuous Integration for Javascript</a></li>
+		<li><a href="http://eriwen.com/productivity/find-is-a-beautiful-tool/">Find is a beautiful tool</a></li>
+		<li><a href="http://eriwen.com/books/best-algorithms-book/">Best algorithms book I ever read</a></li>
+		<li><a href="http://eriwen.com/tools/grep-is-a-beautiful-tool/">grep is a beautiful tool</a></li>
+		<li><a href="http://eriwen.com/javascript/js-stack-trace/">Javascript stacktrace in any browser</a></li>
+		<li><a href="http://eriwen.com/javascript/highlight-search-results-with-js/">Highlight search results with Javascript and CSS</a></li></ul>
 	</section>
 	<section id="elsewheres-container" class="section">
 		<header><h3>Elsewheres</h3></header>
