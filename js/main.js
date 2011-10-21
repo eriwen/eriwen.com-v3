@@ -30,6 +30,8 @@
 			} else if ($('comments')) {
 				Page.fn.addEvent(window, 'scroll', Page.fn.loadCommentsLater);
 			}
+			
+			Page.fn.addEvent(document, 'click', Page.fn.trackLinkClick);
 		},
 		/**
 		 * Clears the value of the target of an event handler.
@@ -83,6 +85,26 @@
 		loadCommentsLater: function() {
 			Page.fn.removeEvent(window, 'scroll', Page.fn.loadCommentsLater);
 			window.setTimeout(Page.fn.loadComments, 17);
+		},
+		/**
+		 * Given an event object, determine if the source element was a link, and track it with Google Analytics
+		 * @param {Event} object
+		 */
+		trackLinkClick: function(evt) {
+			var reUrl = /^https?\:\/\/([^\/]+)(.*)$/,
+				targ = Page.fn.getEventTarget(evt),
+				href = targ.getAttribute('href');
+			if (!href) {
+				return;
+			}
+			var parts = href.match(reUrl);
+			var domain = parts[1];
+			var extension = parts[2].slice(parts[2].lastIndexOf('.'));
+			if (['jnlp', 'pdf', 'zip'].indexOf(extension) !== -1) {
+				_gaq.push(['_trackEvent', 'Downloads', extension.toUpperCase(), href]);
+			} else if (href.indexOf(document.domain) === -1) {
+				_gaq.push(['_trackEvent', 'Outbound Traffic', domain, href]);
+			}
 		},
 		/**
 		 * Adds a javascript event listener to obj of a type
