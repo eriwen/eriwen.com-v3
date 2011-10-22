@@ -27,7 +27,7 @@
 <div class="cleardiv"> </div>
 </footer>
 <!-- Non-obfuscated js source at http://eriwen.com/js/main.js -->
-<script type="text/javascript" src="http://static.eriwen.com/js/all.6bb56af-min.js"></script>
+<script type="text/javascript" src="http://static.eriwen.com/js/all.6bb5c8d-min.js"></script>
 <?php wp_footer(); ?>
 </body>
 </html>
