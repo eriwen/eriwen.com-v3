@@ -21,7 +21,6 @@ def version = Integer.toHexString(Integer.parseInt(versionFormat.format(new Date
 def phpSrcDir = "wp-content/themes/starkers3"
 def cssOutputFile = "all.${version}-min.css"
 def jsOutputFile = "all.${version}-min.js"
-def testDir = file("${projectDir}/test")
 
 repositories {
 	mavenRepo urls: 'http://repository.springsource.com/maven/bundles/release'
@@ -52,7 +51,7 @@ task wrapper(type: Wrapper) {
 	gradleVersion = '1.0-milestone-5'
 }
 
-task jshint(type: Exec, dependsOn: 'init', description: 'runs jshint on all non-test and lib JS files') {
+task jshintz(type: Exec, dependsOn: 'init', description: 'runs jshint on all non-test and lib JS files') {
 	inputs.file file('js/main.js')
 	outputs.file file("${buildDir}/jshint.xml")
 	
@@ -61,6 +60,13 @@ task jshint(type: Exec, dependsOn: 'init', description: 'runs jshint on all non-
 	
 	commandLine = ["jshint", inputFile, "--config", jshintConfig, "--jslint-reporter"]
 	standardOutput = new BufferedOutputStream(new FileOutputStream("${buildDir}/jshint.xml"))
+}
+
+task jsduck(type: Exec, dependsOn: 'init', description: 'Generates jsduck documentation') {
+    inputs.file file('js/main.js')
+    outputs.file file("${buildDir}/docs")
+
+    commandLine = ['jsduck', 'js/main.js', '--output', "${buildDir}/docs"]
 }
 
 /*Not ready
@@ -84,7 +90,7 @@ csslint {
 task test(dependsOn: 'init', description: 'runs Javascript unit tests with Jasmine and PhantomJS') {
 	doLast {
 		def specs = []
-		testDir.eachFile {
+		file("${projectDir}/test").eachFile {
 			if (it.name.endsWith('.html')) {
 				specs << it
 			}
@@ -144,7 +150,7 @@ js {
 	warningLevel = 'QUIET'
 }
 
-task updateIncludes(dependsOn: ['gzipCss', 'js'], description: 'Update header.php and footer.php with new CSS/JS versions') {
+task updateIncludes(dependsOn: ['css', 'js'], description: 'Update header.php and footer.php with new CSS/JS versions') {
 	inputs.files files("${projectDir}/js", "${projectDir}/css", "build.gradle")
 	outputs.files files("${phpSrcDir}/header.php", "${phpSrcDir}/footer.php")
 	
@@ -159,7 +165,7 @@ task updateIncludes(dependsOn: ['gzipCss', 'js'], description: 'Update header.ph
 	}
 }
 
-task uploadArtifactsToS3(dependsOn: ['gzipCss', 'js'], description: 'Uploads CSS and JS to AWS S3') {
+task uploadArtifactsToS3(dependsOn: ['css', 'js'], description: 'Uploads CSS and JS to AWS S3') {
 	inputs.files files("${phpSrcDir}/header.php", "${phpSrcDir}/footer.php", "build.gradle")
 	outputs.dir file(buildDir)
 	
