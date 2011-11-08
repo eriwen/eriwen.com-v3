@@ -261,7 +261,7 @@ Page.fn = Page.prototype = {
 	highlightSearchTerms: function() {
 		// Get search string
 		if (/s\=/.test(window.location.search)) {
-			var searchString = this.getSearchStringFromUrl(window.location.search);
+			var searchString = Page.fn.getSearchStringFromUrl(window.location.search);
 			// Starting node, parent to all nodes you want to search
 			var textContainerNode = $('content');
 			var searchInfo = 'Search Results for: ';
@@ -270,7 +270,7 @@ Page.fn = Page.prototype = {
 			for (var i = 0, l = searchTerms.length; i < l; i++) {
 				// The regex is the secret, it prevents text within tag declarations to be affected
 				var regex = new RegExp(">([^<]*)?(" + searchTerms[i] + ")([^>]*)?<", "ig");
-				this.highlightTextNodes(textContainerNode, regex, i);
+				Page.fn.highlightTextNodes(textContainerNode, regex, i);
 				searchInfo += ' <span class="highlighted term' + i + '">' + searchTerms[i] + '</span> ';
 			}
 			var searchTermDiv = document.createElement("H2");
@@ -281,7 +281,7 @@ Page.fn = Page.prototype = {
 	},
 	/**
 	 * Parse individual words from URL search.
-     * @param {String} str to extract search terms from
+	* @param {String} str to extract search terms from
 	 * @return {String} pipe separated terms
 	 */
 	getSearchStringFromUrl: function(str) {

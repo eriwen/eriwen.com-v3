@@ -3,12 +3,23 @@ describe('Page', function() {
 		// Mock pre-existing objects
 		window.__title = 'Foo Title';
 		window.__permalink = 'Foo Permalink';
-        this.clock = sinon.useFakeTimers();
+		window._gaq = [];
+		this.clock = sinon.useFakeTimers();
 	});
 
-    afterEach(function() {
-        this.clock.restore();
-    });
+	afterEach(function() {
+		this.clock.restore();
+	});
+
+	it('should initialize search terms, search box, and share widgets, comments, and link tracking', function() {
+		spyOn(Page.fn, 'addEvent');
+		spyOn(window, '$').andReturn({innerHTML: ''});
+
+		Page();
+
+		expect(Page.fn.highlightSearchTerms).toHaveBeenCalled;
+		expect(Page.fn.addEvent).toHaveBeenCalled;
+	});
 	
 	it('should get the search term from a query string', function() {
 		var actual = Page.fn.getSearchStringFromUrl('?s=foo');
@@ -63,46 +74,59 @@ describe('Page', function() {
 		expect(mockSearchBox.value).toEqual('Search posts...');
 	});
 
-    it('should call standard add event functions', function() {
-        var addEventListener = jasmine.createSpy();
-        var standardObject = {addEventListener: addEventListener};
-        Page.fn.addEvent(standardObject, 'click', function(){});
-        expect(standardObject.addEventListener).toHaveBeenCalledOnce;
-    });
+	it('should call standard add event functions', function() {
+		var addEventListener = jasmine.createSpy();
+		var standardObject = {addEventListener: addEventListener};
+		Page.fn.addEvent(standardObject, 'click', function(){});
+		expect(standardObject.addEventListener).toHaveBeenCalledOnce;
+	});
 
-    it('should delay loading comments when required', function() {
-        spyOn(Page.fn, 'loadComments');
-        spyOn(Page.fn, 'removeEvent');
+	it('should delay loading comments when required', function() {
+		spyOn(Page.fn, 'loadComments');
+		spyOn(Page.fn, 'removeEvent');
 
-        Page.fn.loadCommentsLater();
-        expect(Page.fn.removeEvent).toHaveBeenCalledOnce;
-        expect(Page.fn.loadComments).not.toHaveBeenCalled;
+		Page.fn.loadCommentsLater();
+		expect(Page.fn.removeEvent).toHaveBeenCalledOnce;
+		expect(Page.fn.loadComments).not.toHaveBeenCalled;
 
-        this.clock.tick(20);
+		this.clock.tick(20);
 
-        expect(Page.fn.loadComments).toHaveBeenCalledOnce;
-    });
+		expect(Page.fn.loadComments).toHaveBeenCalledOnce;
+	});
 
-    it('should call standard remove event functions', function() {
-        var removeEventListener = jasmine.createSpy();
-        var standardObject = {removeEventListener: removeEventListener};
-        Page.fn.removeEvent(standardObject, 'click', function(){});
-        expect(standardObject.removeEventListener).toHaveBeenCalledOnce;
-    });
+	it('should call standard remove event functions', function() {
+		var removeEventListener = jasmine.createSpy();
+		var standardObject = {removeEventListener: removeEventListener};
+		Page.fn.removeEvent(standardObject, 'click', function(){});
+		expect(standardObject.removeEventListener).toHaveBeenCalledOnce;
+	});
 
-    it('should call standard dispatch event functions', function() {
-        var dispatchEvent = jasmine.createSpy();
-        var standardObject = {dispatchEvent: dispatchEvent};
-        Page.fn.fireEvent(standardObject, 'click', function(){});
-        expect(standardObject.dispatchEvent).toHaveBeenCalledOnce;
-    });
+	it('should call standard dispatch event functions', function() {
+		var dispatchEvent = jasmine.createSpy();
+		var standardObject = {dispatchEvent: dispatchEvent};
+		Page.fn.fireEvent(standardObject, 'click', function(){});
+		expect(standardObject.dispatchEvent).toHaveBeenCalledOnce;
+	});
 
-    xit('should call ie-specific event functions', function() {
-        var attachEvent = jasmine.createSpy();
-        var ieObject = {attachEvent: attachEvent};
-        Page.fn.addEvent(ieObject, 'click', function(){});
-        expect(ieObject.attachEvent).toHaveBeenCalledOnce;
-    });
+	xit('should call ie-specific event functions', function() {
+		var attachEvent = jasmine.createSpy();
+		var ieObject = {attachEvent: attachEvent};
+		Page.fn.addEvent(ieObject, 'click', function(){});
+		expect(ieObject.attachEvent).toHaveBeenCalledOnce;
+	});
 
-    xit('should be able to get target elements from events', function() {});
+	xit('should be able to get target elements from events', function() {});
+
+	it('should track outbound link clicks', function() {
+		spyOn(Page.fn, 'getEventTarget').andReturn({getAttribute: function(){ return 'https://github.com' }});
+		Page.fn.trackLinkClick({});
+		expect(window._gaq.length).toEqual(1);
+		expect(window._gaq[0][1]).toEqual('Outbound Traffic');
+	});
+
+	it('should not track non link clicks', function() {
+		spyOn(Page.fn, 'getEventTarget').andReturn({getAttribute: function(){ return false }});
+		Page.fn.trackLinkClick({});
+		expect(window._gaq.length).toEqual(0);
+	});
 });
