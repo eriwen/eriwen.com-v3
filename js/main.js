@@ -3,6 +3,7 @@
  * Web page related functions for eriwen.com
  * @class Page
  * @xtype Page
+ * @namespace
  */
 var Page = function() {
 	return Page.fn.init();
@@ -13,7 +14,7 @@ Page.fn = Page.prototype = {
 	 * Set events and call any other initializing functions.
 	 */
 	init: function() {
-		this.highlightSearchTerms();
+		Page.fn.highlightSearchTerms();
 		// Test for placeholder attribute and emulate if not present
 		if (!('placeholder' in document.createElement('input'))) {
 			var searchinput = $('searchinput');

@@ -24,6 +24,7 @@ def jsOutputFile = "all.${version}-min.js"
 
 repositories {
 	mavenRepo urls: 'http://repository.springsource.com/maven/bundles/release'
+	mavenLocal()
 	mavenCentral()
 }
 
@@ -107,7 +108,7 @@ task test(dependsOn: 'init', description: 'runs Javascript unit tests with Jasmi
 			ant.exec(outputproperty: 'cmdOut', errorproperty: 'cmdErr',
 					resultproperty: 'exitCode', failonerror: 'false', executable: '/usr/bin/env') {
 				arg(value: 'DISPLAY=:1')
-				arg(value: '/usr/local/bin/phantomjs')
+				arg(value: 'phantomjs')
 				arg(value: "${projectDir}/test/lib/phantomjs-jasmine-runner.js")
 				arg(value: "${spec.canonicalPath}")
 			}
