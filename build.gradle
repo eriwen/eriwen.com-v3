@@ -88,6 +88,10 @@ csslint {
 	options = ["--rules=${csslintRules.join(',')}", '--format=lint-xml']
 }
 
+task jstd(type: Exec, dependsOn: 'init', description: 'runs JS tests through JsTestDriver') {
+    commandLine = ['java', '-jar', "${projectDir}/test/lib/JsTestDriver-1.3.3d.jar", '--tests', 'all', '--testOutput', buildDir]
+}
+
 task test(dependsOn: 'init', description: 'runs Javascript unit tests with Jasmine and PhantomJS') {
 	doLast {
 		def specs = []

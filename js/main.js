@@ -94,22 +94,26 @@ Page.fn = Page.prototype = {
     /**
      * Given an event object, determine if the source element was a link, and track it with Google Analytics
      * @param {Event} evt object that should be fired due to a link click
+     * @return True if link was successfully tracked
      */
     trackLinkClick: function(evt) {
         var reUrl = /^https?\:\/\/([^\/]+)(.*)$/,
             targ = Page.fn.getEventTarget(evt),
             href = targ.getAttribute('href');
         if (!href) {
-            return;
+            return false;
         }
         var parts = href.match(reUrl);
         var domain = parts[1];
         var extension = parts[2].slice(parts[2].lastIndexOf('.'));
         if (['jnlp', 'pdf', 'zip'].indexOf(extension) !== -1) {
             _gaq.push(['_trackEvent', 'Downloads', extension.toUpperCase(), href]);
-        } else if (href.indexOf(document.domain) === -1) {
+            return true;
+        } else if (href.indexOf(document.domain) === -1 || !document.domain) {
             _gaq.push(['_trackEvent', 'Outbound Traffic', domain, href]);
+            return true;
         }
+        return false;
     },
     /**
      * Adds a javascript event listener to obj of a type
