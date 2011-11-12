@@ -90,12 +90,10 @@ csslint {
 }
 
 task jstd(type: Exec, dependsOn: 'init', description: 'runs JS tests through JsTestDriver') {
+    // Default to MacOS and check for other environments
     def firefoxPath = '/Applications/Firefox.app/Contents/MacOS/firefox'
-    doFirst {
-        // Default to MacOS and check for other environments
-        if ("uname".execute().text != 'Darwin') {
-            firefoxPath = "which firefox".execute().text
-        }
+    if ("uname".execute().text != 'Darwin') {
+        firefoxPath = "which firefox".execute().text
     }
 
     commandLine = ['/usr/bin/env', 'DISPLAY=:1', 'java', '-jar', "${projectDir}/test/lib/JsTestDriver-1.3.3d.jar", '--config', "${projectDir}/test/jsTestDriver.conf", '--port', '4224', '--browser', firefoxPath, '--tests', 'all', '--testOutput', buildDir, '--runnerMode', 'INFO']
