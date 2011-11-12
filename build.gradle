@@ -90,7 +90,15 @@ csslint {
 }
 
 task jstd(type: Exec, dependsOn: 'init', description: 'runs JS tests through JsTestDriver') {
-    commandLine = ['DISPLAY=:1', 'java', '-jar', "${projectDir}/test/lib/JsTestDriver-1.3.3d.jar", '--config', "${projectDir}/test/jsTestDriver.conf", '--port', '4224', '--browser', '/usr/bin/firefox', '--tests', 'all', '--testOutput', buildDir]
+    def firefoxPath = '/Applications/Firefox.app/Contents/MacOS/firefox'
+    doFirst {
+        // Default to MacOS and check for other environments
+        if ("uname".execute().text != 'Darwin') {
+            firefoxPath = "which firefox".execute().text
+        }
+    }
+
+    commandLine = ['/usr/bin/env', 'DISPLAY=:1', 'java', '-jar', "${projectDir}/test/lib/JsTestDriver-1.3.3d.jar", '--config', "${projectDir}/test/jsTestDriver.conf", '--port', '4224', '--browser', firefoxPath, '--tests', 'all', '--testOutput', buildDir, '--runnerMode', 'INFO']
 }
 
 task test(dependsOn: 'init', description: 'runs Javascript unit tests with Jasmine and PhantomJS') {
@@ -121,9 +129,9 @@ task test(dependsOn: 'init', description: 'runs Javascript unit tests with Jasmi
 			if (ant.project.properties.exitCode != '0') {
 				testsFailed = true
 				numFailures++
-				println '\tFAILED'
+				print '\tFAILED'
 			} else {
-				println '\tPASSED'
+				print '\tPASSED'
 			}
 	
 			file(outputFile).write(ant.project.properties.cmdOut)
