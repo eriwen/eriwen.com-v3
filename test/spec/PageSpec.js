@@ -30,7 +30,20 @@ describe('Page', function() {
 		var actual = Page.fn.getSearchStringFromUrl('?s=foo+bar');
 		expect(actual).toEqual('foo|bar');
 	});
-	
+
+    it('should create a search header with relevant search terms', function() {
+        var testSearchHeaderHtml = 'Search for: <span class="foo">Bar</span>';
+        expect(Page.fn.getSearchHeader(testSearchHeaderHtml).innerHTML).toEqual(testSearchHeaderHtml);
+        expect(Page.fn.getSearchHeader(testSearchHeaderHtml).nodeName.toLowerCase()).toEqual('h2');
+    });
+
+    it('should generated highlighted HTML', function() {
+        var regex = new RegExp(">([^<]*)?(foo)([^>]*)?<", "ig"),
+            originalHtml = '<div>foo bar</div>',
+            expectedHtml = '<div><span class="highlighted term0">foo</span> bar</div>';
+        expect(Page.fn.getHighlightedHtml(originalHtml, regex, 0)).toEqual(expectedHtml);
+    });
+
 	it('should determine the size of 1em on body', function() {
 		document.documentElement.style.fontSize = '13px';
 		expect(Page.fn.getEmSize()).toEqual(13);

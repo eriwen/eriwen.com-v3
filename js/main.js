@@ -14,7 +14,7 @@ Page.fn = Page.prototype = {
      * Set events and call any other initializing functions.
      */
     init: function() {
-        Page.fn.highlightSearchTerms();
+        Page.fn.highlightSearchTerms($('content'));
         // Test for placeholder attribute and emulate if not present
         if (!('placeholder' in document.createElement('input'))) {
             var searchinput = $('searchinput');
@@ -239,7 +239,9 @@ Page.fn = Page.prototype = {
         script.async = true;
         // Suggested by Google: http://googlecode.blogspot.com/2010/11/instant-previews-under-hood.html
         var injectTarget = targetEl || document.getElementsByTagName('head')[0];
-        window.setTimeout(function() {injectTarget.appendChild(script);}, 0);
+        window.setTimeout(function() {
+            injectTarget.appendChild(script);
+        }, 0);
         return script;
     },
     /**
@@ -261,49 +263,57 @@ Page.fn = Page.prototype = {
     },
     /**
      * Check for a search term in the URL and highlight all nodes in content with any of the words.
+     * @param {HTMLElement} textContainerNode node within which to highlight terms
      */
-    highlightSearchTerms: function() {
-        // Get search string
-        if (/s\=/.test(window.location.search)) {
-            var searchString = Page.fn.getSearchStringFromUrl(window.location.search);
-            // Starting node, parent to all nodes you want to search
-            var textContainerNode = $('content');
-            var searchInfo = 'Search Results for: ';
-            // Split search terms on '|' and iterate over resulting array
-            var searchTerms = searchString.split('|');
+    highlightSearchTerms: function(textContainerNode) {
+        var searchString = Page.fn.getSearchStringFromUrl(window.location.search),
+            searchInfo = 'Search Results for: ',
+            searchTerms = searchString.split('|');
+        if (searchString) {
             for (var i = 0, l = searchTerms.length; i < l; i++) {
                 // The regex is the secret, it prevents text within tag declarations to be affected
                 var regex = new RegExp(">([^<]*)?(" + searchTerms[i] + ")([^>]*)?<", "ig");
-                Page.fn.highlightTextNodes(textContainerNode, regex, i);
+                textContainerNode.innerHTML = Page.fn.getHighlightedHtml(textContainerNode.innerHTML, regex, i);
                 searchInfo += ' <span class="highlighted term' + i + '">' + searchTerms[i] + '</span> ';
             }
-            var searchTermDiv = document.createElement("H2");
-            searchTermDiv.className = 'searchterms';
-            searchTermDiv.innerHTML = searchInfo;
-            textContainerNode.insertBefore(searchTermDiv, textContainerNode.childNodes[0]);
+            textContainerNode.insertBefore(Page.fn.getSearchHeader(searchInfo), textContainerNode.childNodes[0]);
         }
     },
     /**
      * Parse individual words from URL search.
-    * @param {String} str to extract search terms from
+     * @param {String} str to extract search terms from
      * @return {String} pipe separated terms
      */
     getSearchStringFromUrl: function(str) {
-        var rawSearchString = str.replace(/[a-zA-Z0-9\?\&\=\%\#]+s\=(\w+)(\&.*)?/, '$1');
-        // Replace '+' with '|' for regex
-        // Also replace '%20' if your cms/blog uses this instead
-        return rawSearchString.replace(/\%20|\+/g, '|');
+        if (/s\=/.test(str)) {
+            var rawSearchString = str.replace(/[a-zA-Z0-9\?\&\=\%\#]+s\=(\w+)(\&.*)?/, '$1');
+            // Replace '+' with '|' for regex
+            // Also replace '%20' if your cms/blog uses this instead
+            return rawSearchString.replace(/\%20|\+/g, '|');
+        }
+        return '';
+    },
+    /**
+     * Given innerHTML for a search header, return a hydrated element to insert.
+     * @param {String} headerHtml content for header
+     * @return {HTMLElement} to be inserted as the search header
+     */
+    getSearchHeader: function(headerHtml) {
+        var searchTermDiv = document.createElement("H2");
+        searchTermDiv.className = 'searchterms';
+        searchTermDiv.innerHTML = headerHtml;
+        return searchTermDiv;
     },
     /**
      * Given an element, Regex, and termid, wrap any regex matches in the
      * content with a span given a class with the termid.
-     * @param {HTMLElement} element to search content
+     * @param {String} elHtml innerHTML to search content
      * @param {RegExp} regex of terms to look for
      * @param {String} termid unique to each word or search term
+     * @return {String} modified HTML
      */
-    highlightTextNodes: function(element, regex, termid) {
-        var tempinnerHTML = element.innerHTML;
-        element.innerHTML = tempinnerHTML.replace(regex, '>$1<span class="highlighted term' + termid + '">$2</span>$3<');
+    getHighlightedHtml: function(elHtml, regex, termid) {
+        return elHtml.replace(regex, '>$1<span class="highlighted term' + termid + '">$2</span>$3<');
     }
 };
 Page.prototype.$ = function(str) {

@@ -117,7 +117,7 @@ task test(dependsOn: 'init', description: 'runs Javascript unit tests with Jasmi
 		def testsFailed = false
 		
 		specs.each { File spec ->
-			println "Running ${spec.name}..."
+			print "Running ${spec.name}..."
 			
 			def outputFile = "${buildDir}/TEST-${spec.name.replace('-', '').replace('.html', '.xml')}"
 			ant.exec(outputproperty: 'cmdOut', errorproperty: 'cmdErr',
@@ -131,9 +131,9 @@ task test(dependsOn: 'init', description: 'runs Javascript unit tests with Jasmi
 			if (ant.project.properties.exitCode != '0') {
 				testsFailed = true
 				numFailures++
-				print '\tFAILED'
+				println 'FAILED'
 			} else {
-				print '\tPASSED'
+				println 'PASSED'
 			}
 	
 			file(outputFile).write(ant.project.properties.cmdOut)
