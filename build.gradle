@@ -99,6 +99,10 @@ task jstd(type: Exec, dependsOn: 'init', description: 'runs JS tests through JsT
     commandLine = ['/usr/bin/env', 'DISPLAY=:1', 'java', '-jar', "${projectDir}/test/lib/JsTestDriver-1.3.3d.jar", '--config', "${projectDir}/test/jsTestDriver.conf", '--port', '4224', '--browser', firefoxPath, '--tests', 'all', '--testOutput', buildDir, '--runnerMode', 'INFO']
 }
 
+test jsCoverage(type: Exec, dependsOn: 'jstd', 'JS code coverage with cobertura') {
+	commandLine = ['python', "${projectDir}/test/lib/lcov-to-cobertura-xml.py", '-b' "${projectDir}/", '-e', 'test.spec', '-e', 'test.lib', "${buildDir}/jsTestDriver.conf-coverage.dat"]
+}
+
 task test(dependsOn: 'init', description: 'runs Javascript unit tests with Jasmine and PhantomJS') {
 	doLast {
 		def specs = []
